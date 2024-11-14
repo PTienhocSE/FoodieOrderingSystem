@@ -4,9 +4,12 @@
  */
 package controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import context.AccountDAO;
 import context.CommentDAO;
 import context.PostDAO;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,10 +19,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import model.Comment;
 import model.Post;
 
@@ -37,6 +42,16 @@ public class PostDetailsServlet extends HttpServlet {
     private CommentDAO commentDAO = new CommentDAO();
     private AccountDAO accountDAO = new AccountDAO();
     private static final String SAVE_DIR = "blogImg";
+
+    private Cloudinary cloudinary;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "dvyu4f7lq",
+                "api_key", "197794349217857",
+                "api_secret", "ZChTJNQesSSMQlZiw5VAusDuomA"));
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -199,35 +214,31 @@ public class PostDetailsServlet extends HttpServlet {
 
             int userID = Integer.parseInt(userIdParam);
 
-            String appPath = request.getServletContext().getRealPath("").replace("build\\web", "web");
-            String savePath = appPath + File.separator + SAVE_DIR;
+            if (filePart != null && filePart.getSize() > 0) {
+                InputStream fileStream = filePart.getInputStream();
+                byte[] fileBytes = fileStream.readAllBytes();
 
-            File fileSaveDir = new File(savePath);
-            if (!fileSaveDir.exists()) {
-                fileSaveDir.mkdir();
-            }
+                Map uploadResult = cloudinary.uploader().upload(fileBytes, ObjectUtils.emptyMap());
 
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String uniqueFileName = System.currentTimeMillis() + "_" + fileName; // Tạo tên file duy nhất
-            String filePath = savePath + File.separator + uniqueFileName;
-            filePart.write(filePath);
+                String imageUrl = (String) uploadResult.get("url");
 
-            String relativePath = ".\\" + SAVE_DIR + File.separator + uniqueFileName;
+                Post newPost = new Post();
+                newPost.setUserID(userID);
+                newPost.setImgURL(imageUrl); // Use the Cloudinary URL
+                newPost.setHeading(title);
+                newPost.setContent(description);
 
-            Post newPost = new Post();
-            newPost.setUserID(userID);
-            newPost.setImgURL(relativePath);
-            newPost.setHeading(title);
-            newPost.setContent(description);
+                PostDAO postDAO = new PostDAO();
+                boolean isAdded = postDAO.createPost(newPost);
 
-            PostDAO postDAO = new PostDAO();
-            boolean isAdded = postDAO.createPost(newPost);
-
-            if (isAdded) {
-                response.sendRedirect("blog");
+                if (isAdded) {
+                    response.sendRedirect("blog");
+                } else {
+                    request.setAttribute("error", "Failed to add post. Please try again.");
+                    request.getRequestDispatcher("/WEB-INF/view/addPost.jsp").forward(request, response);
+                }
             } else {
-                request.setAttribute("error", "Failed to add post. Please try again.");
-                request.getRequestDispatcher("/WEB-INF/view/addPost.jsp").forward(request, response);
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Image file is required.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -264,62 +275,56 @@ public class PostDetailsServlet extends HttpServlet {
         }
     }
 
-    private void handleEditPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            Part filePart = request.getPart("imgPost");
-            String title = request.getParameter("title");
-            String description = request.getParameter("description");
-            String postIdParam = request.getParameter("postID");
-            String userIdParam = request.getParameter("userID");
+   private void handleEditPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    try {
+        Part filePart = request.getPart("imgPost");
+        String title = request.getParameter("title");
+        String description = request.getParameter("description");
+        String postIdParam = request.getParameter("postID");
+        String userIdParam = request.getParameter("userID");
 
-            if (postIdParam == null || userIdParam == null || title == null || description == null) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing post or user ID or other required fields");
-                return;
-            }
+        if (postIdParam == null || userIdParam == null || title == null || description == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing post or user ID or other required fields");
+            return;
+        }
 
-            int postId = Integer.parseInt(postIdParam);
-            int userId = Integer.parseInt(userIdParam);
+        int postId = Integer.parseInt(postIdParam);
+        int userId = Integer.parseInt(userIdParam);
 
-            Post updatedPost = new Post();
-            updatedPost.setPostID(postId);
-            updatedPost.setUserID(userId);
-            updatedPost.setHeading(title);
-            updatedPost.setContent(description);
+        Post updatedPost = new Post();
+        updatedPost.setPostID(postId);
+        updatedPost.setUserID(userId);
+        updatedPost.setHeading(title);
+        updatedPost.setContent(description);
 
-            if (filePart != null && filePart.getSize() > 0) {
-                String appPath = request.getServletContext().getRealPath("/");
-                String savePath = appPath + File.separator + SAVE_DIR;
+        if (filePart != null && filePart.getSize() > 0) {
+            InputStream fileStream = filePart.getInputStream();
+            byte[] fileBytes = fileStream.readAllBytes();
 
-                File fileSaveDir = new File(savePath);
-                if (!fileSaveDir.exists()) {
-                    fileSaveDir.mkdir();
-                }
+            Map uploadResult = cloudinary.uploader().upload(fileBytes, ObjectUtils.emptyMap());
 
-                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-                String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
-                String filePath = savePath + File.separator + uniqueFileName;
-                filePart.write(filePath);
+            String imageUrl = (String) uploadResult.get("url");
 
-                String relativePath = SAVE_DIR + File.separator + uniqueFileName;
-                updatedPost.setImgURL(relativePath);
-            }
+            updatedPost.setImgURL(imageUrl);
+        }
 
-            PostDAO postDAO = new PostDAO();
-            boolean success = postDAO.updatePost(updatedPost);
+        PostDAO postDAO = new PostDAO();
+        boolean success = postDAO.updatePost(updatedPost);
 
-            if (success) {
-                response.sendRedirect("postDetails?postID=" + postId);
-            } else {
-                request.setAttribute("error", "Failed to update the post.");
-                request.getRequestDispatcher("/WEB-INF/view/blog.jsp").forward(request, response);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "An error occurred while processing your request.");
+        if (success) {
+            response.sendRedirect("postDetails?postID=" + postId);
+        } else {
+            request.setAttribute("error", "Failed to update the post.");
             request.getRequestDispatcher("/WEB-INF/view/blog.jsp").forward(request, response);
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("error", "An error occurred while processing your request.");
+        request.getRequestDispatcher("/WEB-INF/view/blog.jsp").forward(request, response);
     }
+}
+
 
     @Override
     public String getServletInfo() {

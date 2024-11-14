@@ -55,6 +55,25 @@
                 </div>
             </div>
 
+            <!-- Input to redeem points -->
+            <div class="redeem-points-section mt-4">
+                <h2>Redeem Points</h2>
+                <c:if test="${not empty message}">
+                    <div class="alert alert-info">
+                        ${message}
+                    </div>
+                </c:if>
+
+                <form action="reward" method="post" class="d-flex align-items-center">
+                    <label for="pointsToRedeem" class="mr-2">Enter Points:</label>
+                    <p style="margin: 0">1000 point = 1000 đ</p>
+                    <input type="number" id="pointsToRedeem" name="pointsToRedeem" min="1" class="form-control w-25" required>
+                    <input type="hidden" name="action" value="redeemPoint">
+                    <input type="hidden" name="userId" value="${user.getUserID()}">
+                    <button type="submit" class="btn btn-primary ml-3">Redeem</button>
+                </form>
+            </div>
+
             <div class="mt-4">
                 <h2>Available Vouchers</h2>
 
@@ -69,7 +88,7 @@
                             <img src="./assets/img/5.png" alt="5%" class="voucher-image">
                             <div class="voucher-info">
                                 <h3>5%</h3>
-                                <p>Requires: 200 points</p>
+                                <p>Requires: 200 points <br> Maximum discount: 50.000đ</p>
                                 <form action="reward" method="post" style="display: inline;">
                                     <input type="hidden" name="action" value="redeem">
                                     <input type="hidden" name="userId" value="${user.getUserID()}">
@@ -85,7 +104,7 @@
                             <img src="./assets/img/10.png" alt="10%" class="voucher-image">
                             <div class="voucher-info">
                                 <h3>10%</h3>
-                                <p>Requires: 500 points</p>
+                                <p>Requires: 500 points <br> Maximum discount: 50.000đ</p>
                                 <form action="reward" method="post" style="display: inline;">
                                     <input type="hidden" name="action" value="redeem">
                                     <input type="hidden" name="userId" value="${user.getUserID()}">
@@ -103,7 +122,7 @@
                             <img src="./assets/img/20.png" alt="20%" class="voucher-image">
                             <div class="voucher-info">
                                 <h3>20%</h3>
-                                <p>Requires: 1000 points</p>
+                                <p>Requires: 1000 points<br> Maximum discount: 50.000đ</p>
                                 <form action="reward" method="post" style="display: inline;">
                                     <input type="hidden" name="action" value="redeem">
                                     <input type="hidden" name="userId" value="${user.getUserID()}">
@@ -119,7 +138,7 @@
                             <img src="./assets/img/50.png" alt="50%" class="voucher-image">
                             <div class="voucher-info">
                                 <h3>50%</h3>
-                                <p>Requires: 5000 points</p>
+                                <p>Requires: 5000 points <br> Maximum discount: 50.000đ</p>
                                 <form action="reward" method="post" style="display: inline;">
                                     <input type="hidden" name="action" value="redeem">
                                     <input type="hidden" name="userId" value="${user.getUserID()}">

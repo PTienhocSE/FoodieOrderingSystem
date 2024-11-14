@@ -100,39 +100,40 @@
                                 <div class="payment_method">
                                     <div>
                                         <input type="radio" name="payment_method" id="vnpay" <c:if test="${payment_method == 'vnpay'}">checked</c:if> value="vnpay">
-                                        <label for="vnpay">VNPAY</label>
-                                    </div>
-                                    <div>
-                                        <input type="radio" name="payment_method" id="cod" <c:if test="${payment_method == 'cod'}">checked</c:if> value="cod">
-                                        <label for="cod">COD</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 mb-20">
-                                    <h4>Pickup method</h4>
-                                    <div class="shipping_method">
-                                        <div>
-                                            <input type="radio" name="shipping_method" id="home_delivery" <c:if test="${deliveryOption == 'home_delivery'}">checked</c:if>  value="home_delivery" required>
-                                            <label for="home_delivery">Delivery at home</label>
+                                            <label for="vnpay">VNPAY</label>
                                         </div>
                                         <div>
-                                            <input type="radio" name="shipping_method" id="pickup" <c:if test="${deliveryOption == 'pickup'}">checked</c:if> value="pickup" required>
-                                            <label for="pickup">Pick up at store</label>
+                                            <input type="radio" name="payment_method" id="cod" <c:if test="${payment_method == 'cod'}">checked</c:if> value="cod">
+                                            <label for="cod">COD</label>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-lg-12 mb-20">
+                                        <h4>Pickup method</h4>
+                                        <div class="shipping_method">
+                                            <div>
+                                                <input type="radio" name="shipping_method" id="home_delivery" <c:if test="${deliveryOption == 'home_delivery'}">checked</c:if>  value="home_delivery" required>
+                                                <label for="home_delivery">Delivery at home</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" name="shipping_method" id="pickup" <c:if test="${deliveryOption == 'pickup'}">checked</c:if> value="pickup" required>
+                                                <label for="pickup">Pick up at store</label>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <div class="col-lg-12 mb-20" id="pickup_time_field" style="display:none;">
-                                    <label>Time pick up<span>*</span></label>
-                                    <input name="pickup_time" type="datetime-local" value="${pickup_time}" id="pickup_time">
+                                    <div class="col-lg-12 mb-20" id="pickup_time_field" style="display:none;">
+                                        <label>Time pick up<span>*</span></label>
+                                        <input name="pickup_time" type="datetime-local" value="${pickup_time}" id="pickup_time">
                                 </div>
                                 <input type="hidden" name="userID" value="${user.userID}">
 
-                                <button class="btn btn-primary" type="submit">Complete the order</button>
+                                <button class="btn btn-success" type="submit">Complete the order</button>
 
                             </div>
 
                             <div class="col-lg-7 col-md-7">
                                 <h3>Cart</h3>
+                                <!-- Hiển thị giỏ hàng -->
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -156,48 +157,46 @@
                                             </tr>
                                         </c:forEach>
                                         <tr>
-                                            <td colspan="3">Total</td>
-                                            <td>
-                                                <fmt:formatNumber value="${total}" type="number" pattern="#,###"/>
+                                            <td style="color: #ff6b6b; font-weight: 700;" colspan="3">Total</td>
+                                            <td style="color: #ff6b6b; font-weight: 700;">
+                                                <fmt:formatNumber value="${originalAmount}" type="number" pattern="#,###"/>
                                             </td>
                                         </tr>
                                         <c:if test="${not empty discountAmount}">
                                             <tr>
-                                                <td colspan="3">Discount</td>
-                                                <td>
+                                                <td style="color: #5eae53; font-weight: 700;" colspan="3">Discount</td>
+                                                <td style="color: #5eae53; font-weight: 700;">
                                                     <fmt:formatNumber value="${discountAmount}" type="number" pattern="#,###"/>
                                                 </td>
                                             </tr>
                                         </c:if>
-                                        <c:if test="${not empty totalAfterDiscount}">
+                                        <c:if test="${not empty finalAmount}">
                                             <tr>
-                                                <td colspan="3">Total After Discount</td>
-                                                <td>
-                                                    <fmt:formatNumber value="${totalAfterDiscount}" type="number" pattern="#,###"/>
+                                                <td style="color: #ff6b6b; font-weight: 700;" colspan="3">Total After Discount</td>
+                                                <td style="color: #ff6b6b; font-weight: 700;">
+                                                    <fmt:formatNumber value="${finalAmount}" type="number" pattern="#,###"/>
                                                 </td>
                                             </tr>
                                         </c:if>
                                     </tbody>
                                 </table>
 
+                                <!-- Hiển thị phần mã giảm giá -->
                                 <div class="discount-section">
                                     <label>Discount Code:</label>
                                     <input type="text" id="discount_code" value="${discountCode}" name="discount_code"/>
                                     <input type="hidden" name="userID" value="${user.userID}">
                                     <input type="hidden" name="action" value="applyDiscount">
-                                    <button style="
-                                            width: 25%;
-                                            padding: 13px;
-                                            " type="submit" formaction="/OrderingSystem/discountManage" formmethod="POST" class="btn btn-secondary">Apply</button>
+                                    <button style="width: 25%; padding: 13px;" type="submit" formaction="/OrderingSystem/discountManage" formmethod="POST" class="btn btn-success">Apply</button>
                                 </div>
 
-                                <!-- Check for errorMessage and display it if exists -->
+                                <!-- Hiển thị thông báo lỗi nếu có -->
                                 <c:if test="${not empty errorMessage}">
                                     <div class="alert alert-danger mt-3" role="alert">
                                         ${errorMessage}
                                     </div>
                                 </c:if>
-
+                                
                             </div>
                         </div>
                     </form>

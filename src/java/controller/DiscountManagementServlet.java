@@ -102,80 +102,85 @@ public class DiscountManagementServlet extends HttpServlet {
         String address = request.getParameter("address");
         String phone = request.getParameter("phone");
         int userID = Integer.parseInt(request.getParameter("userID"));
-        String payment_method = request.getParameter("payment_method");
+        String paymentMethod = request.getParameter("payment_method");
         String deliveryOption = request.getParameter("shipping_method");
         String timePickup = request.getParameter("pickup_time");
-        Account account = accountDAO.getUserById(userID);
 
+        Account account = accountDAO.getUserById(userID);
         Double discountPercentage = discountDAO.getDiscountPercentageByDiscountCode(discountCode);
 
         if (discountPercentage == null) {
             request.setAttribute("errorMessage", "The discount code is invalid or has expired.");
-            request.setAttribute("address", address);
-            request.setAttribute("phone", phone);
-            session.setAttribute("timePickup", timePickup);
-            session.setAttribute("payment_method", payment_method);
-            session.setAttribute("deliveryOption", deliveryOption);
-            request.getRequestDispatcher("WEB-INF/view/checkout.jsp").forward(request, response);
+            forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption);
             return;
         }
 
         int discountOwnerUserID = discountDAO.getUserIdByDiscountCode(discountCode);
         int discountShopID = accountDAO.getShopIDByUserID(discountOwnerUserID);
 
+        Discount discount = discountDAO.getAllDiscountsByShopID(discountShopID)
+                .stream()
+                .filter(d -> d.getDiscountCODE().equals(discountCode))
+                .findFirst()
+                .orElse(null);
+
+        if (discount == null) {
+            request.setAttribute("errorMessage", "The discount code is not applicable.");
+            forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption);
+            return;
+        }
+
+        Double minimumAmount = discount.getMinimumAmount();
+        Double maximumAmount = discount.getMaximumAmount();
+
         List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+        double totalOrderAmount = 0.0;
 
         for (CartItemDTO item : cart) {
             int productShopID = item.getProduct().getShopId();
-            if (productShopID != discountShopID) {
+
+            if (discountShopID != 0 && productShopID != discountShopID) {
                 request.setAttribute("errorMessage", "The discount code is only applicable to products from the same shop.");
-                request.setAttribute("address", address);
-                request.setAttribute("phone", phone);
-                session.setAttribute("timePickup", timePickup);
-                session.setAttribute("payment_method", payment_method);
-                session.setAttribute("deliveryOption", deliveryOption);
-                request.getRequestDispatcher("WEB-INF/view/checkout.jsp").forward(request, response);
+                forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption);
                 return;
             }
+
+            totalOrderAmount += item.getProduct().getPrice() * item.getQuantity();
         }
 
-        double total = 0;
-        double discountAmount = 0;
-
-        for (CartItemDTO item : cart) {
-            double itemTotal = item.getProduct().getPrice() * item.getQuantity();
-            total += itemTotal;
-            discountAmount += itemTotal * (discountPercentage / 100);
+        if (totalOrderAmount < minimumAmount) {
+            request.setAttribute("errorMessage", "The discount code requires a minimum order amount of " + minimumAmount + ".");
+            forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption);
+            return;
         }
 
-        double totalAfterDiscount = total - discountAmount;
+        double discountAmount = totalOrderAmount * (discountPercentage / 100);
 
-        try {
-            int discountID = discountDAO.getDiscountIDByCode(discountCode);
-            int currentTotalUse = discountDAO.getCurrentTotalUse(discountID);
-
-            discountDAO.updateTotalUse(discountID, currentTotalUse + 1);
-
-            int numberOfDiscount = discountDAO.getNumberOfDiscount(discountID);
-            if (currentTotalUse + 1 >= numberOfDiscount) {
-                discountDAO.deleteDiscount(discountID);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (discountAmount > maximumAmount) {
+            discountAmount = maximumAmount;
         }
 
-        request.setAttribute("totalAfterDiscount", totalAfterDiscount);
-        request.setAttribute("total", total);
+        double finalAmount = totalOrderAmount - discountAmount;
+
+        session.setAttribute("payment_method", paymentMethod);
+        session.setAttribute("deliveryOption", deliveryOption);
+        request.setAttribute("phone", phone);
+        request.setAttribute("address", address);
+        session.setAttribute("finalAmount", finalAmount);
+        session.setAttribute("discountAmount", discountAmount);
+        session.setAttribute("originalAmount", totalOrderAmount);
+        session.setAttribute("discountCode", discountCode);
+
+        request.getRequestDispatcher("WEB-INF/view/checkout.jsp").forward(request, response);
+    }
+
+    private void forwardToCheckout(HttpServletRequest request, HttpServletResponse response, String address, String phone, String timePickup, String payment_method, String deliveryOption) throws ServletException, IOException {
         request.setAttribute("address", address);
         request.setAttribute("phone", phone);
-        request.setAttribute("discountCode", discountCode);
-        request.setAttribute("discountAmount", discountAmount);
-        request.setAttribute("cart", cart);
-        session.setAttribute("user", account);
+        HttpSession session = request.getSession();
+        session.setAttribute("timePickup", timePickup);
         session.setAttribute("payment_method", payment_method);
         session.setAttribute("deliveryOption", deliveryOption);
-        session.setAttribute("timePickup", timePickup);
-
         request.getRequestDispatcher("WEB-INF/view/checkout.jsp").forward(request, response);
     }
 
@@ -187,6 +192,8 @@ public class DiscountManagementServlet extends HttpServlet {
         String discountCode = request.getParameter("discountCode");
         int numberOfDiscount = Integer.parseInt(request.getParameter("numberOfDiscount"));
         double discountPercentage = Double.parseDouble(request.getParameter("discountPercentage"));
+        double minimumAmount = Double.parseDouble(request.getParameter("minimumAmount"));
+        double maximumAmount = Double.parseDouble(request.getParameter("maximumAmount"));
         int shopID = accDAO.getShopIDByUserID(userID);
 
         Discount discount = new Discount();
@@ -195,6 +202,8 @@ public class DiscountManagementServlet extends HttpServlet {
         discount.setNumberOfDiscount(numberOfDiscount);
         discount.setDiscountPercentage(discountPercentage);
         discount.setShopID(shopID);
+        discount.setMinimumAmount(minimumAmount);
+        discount.setMaximumAmount(maximumAmount);
 
         DiscountDAO discountDAO = new DiscountDAO();
         discountDAO.createDiscount(discount);
@@ -205,9 +214,9 @@ public class DiscountManagementServlet extends HttpServlet {
     protected void updateDiscount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            int discountID = Integer.parseInt(request.getParameter("discountID")); // Get the discount ID
-            int numberOfDiscount = Integer.parseInt(request.getParameter("numberOfDiscount")); // Get the new number of vouchers
-            double discountPercentage = Double.parseDouble(request.getParameter("discountPercentage")); // Get the new discount percentage
+            int discountID = Integer.parseInt(request.getParameter("discountID"));
+            int numberOfDiscount = Integer.parseInt(request.getParameter("numberOfDiscount"));
+            double discountPercentage = Double.parseDouble(request.getParameter("discountPercentage"));
 
             Discount discount = new Discount();
             discount.setDiscountID(discountID);

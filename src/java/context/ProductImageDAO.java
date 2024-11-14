@@ -43,11 +43,14 @@ public class ProductImageDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if(images.isEmpty()){
+            images.add(new ProductImage(productID, true, "https://i.pinimg.com/736x/8d/2a/9f/8d2a9f9391a995a7d29a0ce66660e170.jpg"));
+        }
         return images;
     }
 
     public ProductImage getAvatarProductImageByID(int productID) {
-        ProductImage image = null;
+        ProductImage image = new ProductImage(productID, true, "https://i.pinimg.com/736x/8d/2a/9f/8d2a9f9391a995a7d29a0ce66660e170.jpg");
         String query = "SELECT * FROM ProductImage WHERE ProductID = ? AND IsAvatar = 1";
         try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
 

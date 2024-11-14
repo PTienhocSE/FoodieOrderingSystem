@@ -1,5 +1,7 @@
 package controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.vnpay.common.Config;
@@ -20,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -28,6 +31,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.TimeZone;
 import model.Order;
 import model.Refund;
@@ -107,31 +111,32 @@ public class RefundServlet extends HttpServlet {
             String refundOption = req.getParameter("refundOption");
             Part filePart = req.getPart("refundReasonImg");
 
-            String appPath = req.getServletContext().getRealPath("").replace("build\\web", "web");
-            String savePath = appPath + File.separator + SAVE_DIR;
-
-            File fileSaveDir = new File(savePath);
-            if (!fileSaveDir.exists()) {
-                fileSaveDir.mkdir();
-            }
-
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
-            String filePath = savePath + File.separator + uniqueFileName;
-            filePart.write(filePath);
-
-            String relativePath = "./" + SAVE_DIR + File.separator + uniqueFileName;
-            RefundDAO refundDAO = new RefundDAO();
-
-            if (refundOption != null) {
-                int refundType = refundOption.equals("points") ? 1 : 2;
-                Refund refund = new Refund(orderID, refundReason, BigDecimal.ZERO, "PENDING", relativePath, refundType);
-                refundDAO.addRefundRequest(refund);
-            } else {
+            if (refundOption == null) {
                 req.getSession().setAttribute("alertMessage", "Please select a refund option.");
                 response.sendRedirect("/OrderingSystem/order-history");
                 return;
             }
+
+            Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", "dvyu4f7lq",
+                    "api_key", "197794349217857",
+                    "api_secret", "ZChTJNQesSSMQlZiw5VAusDuomA"));
+
+            // Handle image file upload to Cloudinary
+            String imageUrl = null;
+            if (filePart != null && filePart.getSize() > 0) {
+                InputStream fileStream = filePart.getInputStream();
+                byte[] fileBytes = fileStream.readAllBytes();
+
+                Map uploadResult = cloudinary.uploader().upload(fileBytes, ObjectUtils.emptyMap());
+
+                imageUrl = (String) uploadResult.get("url");
+            }
+
+            RefundDAO refundDAO = new RefundDAO();
+            int refundType = refundOption.equals("points") ? 1 : 2;
+            Refund refund = new Refund(orderID, refundReason, BigDecimal.ZERO, "PENDING", imageUrl, refundType);
+            refundDAO.addRefundRequest(refund);
 
             OrderDAO orderDAO = new OrderDAO();
             String paymentID = orderDAO.getPaymentIDByOrderID(orderID);
@@ -376,7 +381,7 @@ public class RefundServlet extends HttpServlet {
 
         String refundID = request.getParameter("refundId");
         double pointsToRefund = Double.parseDouble(request.getParameter("pointsToRefund"));
-        int pointsToRefundInt = (int) pointsToRefund; 
+        int pointsToRefundInt = (int) pointsToRefund;
         int orderID;
         try {
             orderID = refundDAO.getOrderIdByRefundId(Integer.parseInt(refundID));

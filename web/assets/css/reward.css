@@ -6,94 +6,191 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Created on : Oct 22, 2024, 11:23:06 PM
     Author     : phuct
 */
-.voucher-card {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    margin: 10px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.voucher-image {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-.voucher-info {
-    text-align: center;
-}
-.btn-primary {
-    background-color: #007bff;
-    border: none;
-    transition: background-color 0.3s, transform 0.2s;
-}
-.btn-primary:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-}
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 30px;
+/* account.css */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-    margin: 40px auto;
-    padding: 40px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 80%;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 44px auto;
 }
 
-.voucher-card {
-    border: none ;
-    border-radius: 0px;
+/* Header with user profile and points */
+.header {
+    background-color: #fff;
     padding: 20px;
-    text-align: center;
-    margin: 10px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    background-color: white;
-    box-shadow: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.user-info {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    height: 280px;
+}
+
+.user-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+}
+
+.user-info h2 {
+    font-size: 24px;
+    margin: 0;
+    color: #333;
+}
+
+.user-info p {
+    margin: 5px 0;
+    color: #777;
+}
+
+.user-info i {
+    font-size: 20px;
+    color: #4CAF50;
+}
+
+/* Points button styling */
+.user-info .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.user-info .btn:hover {
+    background-color: #45a049;
+}
+
+/* Voucher Section */
+.mt-4 {
+    margin-top: 40px;
+}
+
+h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Voucher Cards */
+.voucher-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.voucher-card:hover {
+    transform: scale(1.05);
+}
+
+.voucher-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
 }
 
 .voucher-info {
-    /* display: flex; */
-    position: relative;
-    bottom: 260px;
-    left: 133px;
-    background-color: #000000a1;
-    padding: 76px 26px;
-    border-radius: 17px;
-    max-width: 211px;
-    max-height: 250px;
-    color: white
+    padding: 20px;
+    text-align: center;
 }
 
-.voucher-info p{
-    color: white
+.voucher-info h3 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 15px;
 }
-button.btn.btn-primary {
-    text-decoration: none;
-    color: #ff6b6b;
-    border: 1px solid #ff6b6b;
-    border-radius: 17px;
-    background-color: white;
+
+.voucher-info p {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 20px;
 }
-button.btn.btn-primary:hover {
-    text-decoration: none;
-    color: white;
-    border: 1px solid white;
-    border-radius: 17px;
+
+.voucher-info .btn {
     background-color: #ff6b6b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid;
+}
+
+.voucher-info .btn:hover {
+    background-color: white;
+    color: #ff6b6b;
+}
+
+.alert-info {
+    padding: 15px;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .voucher-card {
+        margin-bottom: 15px;
+    }
+
+    .voucher-info h3 {
+        font-size: 22px;
+    }
+
+    .voucher-info p {
+        font-size: 14px;
+    }
+
+    .user-info h2 {
+        font-size: 22px;
+    }
+
+    .user-info p {
+        font-size: 14px;
+    }
+}
+
+form.d-flex.align-items-center {
+    flex-flow: column;
+    gap: 9px;
+}
+
+
+.redeem-points-section h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.redeem-points-section .form-control {
+    width: 200px;
+    margin-right: 10px;
+}
+
+.redeem-points-section .btn-primary {
+    background-color: #ff6b6b;
+    color: white;
+    border: 1px solid;
+}
+
+.redeem-points-section .btn-primary:hover {
+    background-color: white;
+    color: #ff6b6b;
 }

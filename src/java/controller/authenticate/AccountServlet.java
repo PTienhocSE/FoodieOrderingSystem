@@ -4,10 +4,11 @@
  */
 package controller.authenticate;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import context.AccountDAO;
-import context.OrderDAO;
+import jakarta.servlet.ServletConfig;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -15,12 +16,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.List;
+import java.io.InputStream;
+import java.util.Map;
 import model.Account;
-import model.Order;
-import model.OrderDTO;
 
 /**
  *
@@ -31,7 +29,16 @@ import model.OrderDTO;
         maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class AccountServlet extends HttpServlet {
 
-    private static final String SAVE_DIR = "avatarImages";
+    
+    private Cloudinary cloudinary;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "dvyu4f7lq",
+                "api_key", "197794349217857",
+                "api_secret", "ZChTJNQesSSMQlZiw5VAusDuomA"));
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -82,27 +89,24 @@ public class AccountServlet extends HttpServlet {
 
     private void updateAvatar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String appPath = request.getServletContext().getRealPath("/");
-        String savePath = appPath + File.separator + SAVE_DIR;
-
-        File fileSaveDir = new File(savePath);
-        if (!fileSaveDir.exists()) {
-            fileSaveDir.mkdir();
-        }
+        
+        
 
         Part filePart = request.getPart("img");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
-        String relativePath;
+        
         if (filePart != null && filePart.getSize() > 0) {
-            String filePath = savePath + File.separator + uniqueFileName;
-            filePart.write(filePath);
-            relativePath = SAVE_DIR + File.separator + uniqueFileName;
+            
+            InputStream fileStream = filePart.getInputStream();
+            // Đọc dữ liệu từ InputStream vào một mảng byte
+            byte[] fileBytes = fileStream.readAllBytes();
 
+            Map uploadResult = cloudinary.uploader().upload(fileBytes, ObjectUtils.emptyMap());
+
+            String imageUrl = (String) uploadResult.get("url");
             int userID = Integer.parseInt(request.getParameter("userID"));
             AccountDAO userDAO = new AccountDAO();
             Account account = userDAO.getUserById(userID);
-            account.setAvtImg(relativePath);
+            account.setAvtImg(imageUrl);
             userDAO.changeAvatarByUserID(account);
 
             HttpSession session = request.getSession();

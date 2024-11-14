@@ -7,6 +7,7 @@ package controller;
 import context.ProductDAO;
 import context.ProductImageDAO;
 import context.ShopDAO;
+import jakarta.servlet.ServletConfig;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -31,6 +32,10 @@ import model.Product;
 import model.ProductDTO;
 import model.ProductImage;
 import model.Shop;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
  *
@@ -41,6 +46,16 @@ import model.Shop;
         maxRequestSize = 1024 * 1024 * 50)   // 50MB
 @WebServlet(name = "RestaurantDetailServlet", urlPatterns = {"/restaurant-detail"})
 public class RestaurantDetailServlet extends HttpServlet {
+
+    private Cloudinary cloudinary;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "dvyu4f7lq",
+                "api_key", "197794349217857",
+                "api_secret", "ZChTJNQesSSMQlZiw5VAusDuomA"));
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -128,8 +143,7 @@ public class RestaurantDetailServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private static final String SAVE_DIR1 = "foodImages";
-    private static final String SAVE_DIR2 = "restaurantImages";
+    
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -150,13 +164,6 @@ public class RestaurantDetailServlet extends HttpServlet {
 
     private void addProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String appPath = request.getServletContext().getRealPath("").replace("build\\web", "web");
-        String savePath = appPath + File.separator + SAVE_DIR1;
-
-        File fileSaveDir = new File(savePath);
-        if (!fileSaveDir.exists()) {
-            fileSaveDir.mkdir();
-        }
 
         ProductDAO pDAO = new ProductDAO();
         String name = request.getParameter("name");
@@ -170,14 +177,17 @@ public class RestaurantDetailServlet extends HttpServlet {
         ProductImageDAO pid = new ProductImageDAO();
 
         Part filePart = request.getPart("img");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String relativePath;
-        if (filePart != null && filePart.getSize() > 0) {
-            String filePath = savePath + File.separator + fileName;
-            filePart.write(filePath);
-            relativePath = SAVE_DIR1 + File.separator + fileName;
 
-            pid.insertProductImage(new ProductImage(productID, true, relativePath));
+        if (filePart != null && filePart.getSize() > 0) {
+
+            InputStream fileStream = filePart.getInputStream();
+            // Đọc dữ liệu từ InputStream vào một mảng byte
+            byte[] fileBytes = fileStream.readAllBytes();
+
+            Map uploadResult = cloudinary.uploader().upload(fileBytes, ObjectUtils.emptyMap());
+
+            String imageUrl = (String) uploadResult.get("url");
+            pid.insertProductImage(new ProductImage(productID, true, imageUrl));
         }
 
         response.sendRedirect("restaurant-detail?shopId=" + shopID);
@@ -185,13 +195,6 @@ public class RestaurantDetailServlet extends HttpServlet {
 
     private void updateProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String appPath = request.getServletContext().getRealPath("").replace("build\\web", "web");
-        String savePath = appPath + File.separator + SAVE_DIR1;
-
-        File fileSaveDir = new File(savePath);
-        if (!fileSaveDir.exists()) {
-            fileSaveDir.mkdir();
-        }
 
         ProductDAO pDAO = new ProductDAO();
         String name = request.getParameter("name");
@@ -210,42 +213,41 @@ public class RestaurantDetailServlet extends HttpServlet {
         ProductImageDAO pid = new ProductImageDAO();
 
         Part filePart = request.getPart("img");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String relativePath;
-        if (filePart != null && filePart.getSize() > 0) {
-            String filePath = savePath + File.separator + fileName;
-            filePart.write(filePath);
-            relativePath = SAVE_DIR1 + File.separator + fileName;
 
-            pid.updateProductImage(new ProductImage(productID, true, relativePath));
+        if (filePart != null && filePart.getSize() > 0) {
+
+            InputStream fileStream = filePart.getInputStream();
+            // Đọc dữ liệu từ InputStream vào một mảng byte
+            byte[] fileBytes = fileStream.readAllBytes();
+
+            Map uploadResult = cloudinary.uploader().upload(fileBytes, ObjectUtils.emptyMap());
+
+            String imageUrl = (String) uploadResult.get("url");
+
+            pid.updateProductImage(new ProductImage(productID, true, imageUrl));
         }
 
         response.sendRedirect("restaurant-detail?shopId=" + shopID);
     }
-    
-    
+
     private void changeAvatar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String appPath = request.getServletContext().getRealPath("").replace("build\\web", "web");
-        String savePath = appPath + File.separator + SAVE_DIR2;
 
-        File fileSaveDir = new File(savePath);
-        if (!fileSaveDir.exists()) {
-            fileSaveDir.mkdir();
-        }
         ShopDAO sDAO = new ShopDAO();
         int shopID = Integer.parseInt(request.getParameter("shopID"));
-        
 
         Part filePart = request.getPart("img");
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String relativePath;
-        if (filePart != null && filePart.getSize() > 0) {
-            String filePath = savePath + File.separator + fileName;
-            filePart.write(filePath);
-            relativePath = "./"+SAVE_DIR2 + "/" + fileName;
 
-            sDAO.updateShopImage(shopID, relativePath);
+        if (filePart != null && filePart.getSize() > 0) {
+            InputStream fileStream = filePart.getInputStream();
+            // Đọc dữ liệu từ InputStream vào một mảng byte
+            byte[] fileBytes = fileStream.readAllBytes();
+
+            Map uploadResult = cloudinary.uploader().upload(fileBytes, ObjectUtils.emptyMap());
+
+            String imageUrl = (String) uploadResult.get("url");
+
+            sDAO.updateShopImage(shopID, imageUrl);
         }
 
         response.sendRedirect("restaurant-detail?shopId=" + shopID);
@@ -255,7 +257,6 @@ public class RestaurantDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         int productId = Integer.parseInt(request.getParameter("productId"));
 
-        
         int shopID = Integer.parseInt(request.getParameter("shopID"));
         ProductDAO pDAO = new ProductDAO();
         try {
@@ -274,7 +275,7 @@ public class RestaurantDetailServlet extends HttpServlet {
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         String address = request.getParameter("address");
-        
+
         String timeOpenStr = request.getParameter("timeOpen");
         String timeCloseStr = request.getParameter("timeClose");
 
@@ -287,7 +288,7 @@ public class RestaurantDetailServlet extends HttpServlet {
             timeClose = LocalTime.parse(timeCloseStr, formatter);
         } catch (DateTimeParseException e) {
             e.printStackTrace();
-            response.sendRedirect("404.jsp"); 
+            response.sendRedirect("404.jsp");
             return;
         }
         Shop s = new Shop();

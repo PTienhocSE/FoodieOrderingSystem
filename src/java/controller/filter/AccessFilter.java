@@ -104,12 +104,11 @@ public class AccessFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(false);
 
-        if (session != null && session.getAttribute("role") == "customer" ) {
-            
-            chain.doFilter(request, response);
+        if (session == null || session.getAttribute("role") == "admin" ) {
+            httpResponse.sendRedirect("login");
 
         } else {
-           httpResponse.sendRedirect("login");
+            chain.doFilter(request, response);
         }
     }
 

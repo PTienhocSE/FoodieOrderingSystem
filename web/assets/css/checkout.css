@@ -226,3 +226,30 @@ button.btn-secondary:hover {
     color: #fff;
     border-color: #333;
 }
+
+.checkout_form h3, .checkout_form h4 {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+td {
+    font-size: 17px;
+}
+.row button {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+.row button:hover {
+    border: 1px solid #5eae53;
+    background-color: white;
+    color: #5eae53;
+}
+.payment_method input[type="radio"]:checked + label, .shipping_method input[type="radio"]:checked + label {
+    background-color: #ff6b6b;
+    color: #fff;
+    border-color: #ff6b6b;
+}

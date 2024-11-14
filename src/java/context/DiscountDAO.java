@@ -17,7 +17,7 @@ public class DiscountDAO {
     }
 
     public void createDiscount(Discount discount) {
-        String sql = "INSERT INTO Discount (UserID, DiscountCODE, NumberOfDiscount, TotalUse, DiscountPercentage, ShopID) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Discount (UserID, DiscountCODE, NumberOfDiscount, TotalUse, DiscountPercentage, ShopID, MinimumAmount, MaximumAmount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -30,6 +30,8 @@ public class DiscountDAO {
             ps.setInt(4, discount.getTotalUse());
             ps.setDouble(5, discount.getDiscountPercentage());
             ps.setInt(6, discount.getShopID());
+            ps.setDouble(7, discount.getMinimumAmount());
+            ps.setDouble(8, discount.getMaximumAmount());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,6 +64,8 @@ public class DiscountDAO {
                 discount.setDiscountPercentage(rs.getDouble("DiscountPercentage"));
                 discount.setShopID(rs.getInt("ShopID"));
                 discount.setStatus(rs.getInt("Status"));
+                discount.setMinimumAmount(rs.getDouble("MinimumAmount"));
+                discount.setMaximumAmount(rs.getDouble("MaximumAmount"));
                 discounts.add(discount);
             }
         } catch (SQLException e) {
@@ -97,7 +101,8 @@ public class DiscountDAO {
                 discount.setDiscountPercentage(rs.getDouble("DiscountPercentage"));
                 discount.setShopID(rs.getInt("ShopID"));
                 discount.setStatus(rs.getInt("Status"));
-
+                discount.setMinimumAmount(rs.getDouble("MinimumAmount"));
+                discount.setMaximumAmount(rs.getDouble("MaximumAmount"));
                 discounts.add(discount);
             }
         } catch (SQLException e) {
@@ -135,7 +140,7 @@ public class DiscountDAO {
         }
         return discountPercentage;
     }
-    
+
     public int getUserIdByDiscountCode(String DiscountCODE) {
         int UserID = 0;
         String sql = "SELECT UserID FROM Discount WHERE DiscountCODE = ? AND Status = 1";
@@ -146,7 +151,7 @@ public class DiscountDAO {
         try {
             conn = dbContext.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, DiscountCODE); 
+            ps.setString(1, DiscountCODE);
             rs = ps.executeQuery();
 
             if (rs.next()) {

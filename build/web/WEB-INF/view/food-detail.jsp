@@ -232,7 +232,7 @@
 
             <div class ="product-descript" >
                 <div class ="product-tab">
-                    <h4>REVIEW</h4>
+                    <h4>FEEDBACK</h4>
                 </div>
                 <form action="FeedbackServlet" method="POST">
                     <c:if test="${sessionScope.role == 'customer' && valid != null}">

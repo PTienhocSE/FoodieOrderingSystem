@@ -145,7 +145,7 @@ public class CheckoutServlet extends HttpServlet {
 
     private void clearCart(int userID, List<CartItem> cartItemsForOrder) {
         CartDAO cartDAO = new CartDAO();
-        for (CartItem c : cartItemsForOrder){
+        for (CartItem c : cartItemsForOrder) {
             cartDAO.deleteCartProduct(c.getProduct().getProductId(), userID);
         }
     }
@@ -231,6 +231,7 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         Set<Integer> shopIds = new HashSet<>();
+        double totalAmount = 0;  
 
         for (String productID : selected) {
             try {
@@ -245,6 +246,8 @@ public class CheckoutServlet extends HttpServlet {
                     cDTO.setProduct(product);
                     cDTO.setQuantity(quantity);
                     cartDTO.add(cDTO);
+
+                    totalAmount += product.getPrice() * quantity;
                 }
             } catch (NumberFormatException e) {
                 throw new ServletException("Invalid product ID or quantity", e);
@@ -256,6 +259,8 @@ public class CheckoutServlet extends HttpServlet {
             request.getRequestDispatcher("/cart").forward(request, response);
             return;
         }
+
+        request.setAttribute("originalAmount", totalAmount);
 
         session.setAttribute("cart", cartDTO);
         session.setAttribute("size", cartDTO.size());

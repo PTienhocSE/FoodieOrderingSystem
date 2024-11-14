@@ -483,15 +483,159 @@ select * from [Order] order by CreatedDate DESC
 ALTER TABLE [Order]
 add PaymentID int not null default 0000
 
-
+ALTER TABLE Discount 
+DROP COLUMN DiscountName, StartDate, EndDate;
 ALTER TABLE Discount 
 ADD 
     DiscountCODE NVARCHAR(100) NOT NULL,
     NumberOfDiscount INT NOT NULL,
     TotalUse INT NOT NULL
 
+ALTER TABLE Discount 
+ADD 
+ShopID int 
+SELECT DiscountPercentage FROM Discount WHERE DiscountCODE = 'O00IZLP4' AND Status = 1
 
+ALTER TABLE [Order] 
+ADD 
+Phone nvarchar(11)
 ALTER TABLE Discount 
 DROP COLUMN DiscountName, StartDate, EndDate;
 
 select * from Discount
+
+Alter table Refund 
+Add RefundOption int default 1;
+UPDATE Users
+SET Status = 1
+WHERE Status IS NULL;
+
+ALTER TABLE Discount
+DROP CONSTRAINT FK_Discount_Users, 
+ADD CONSTRAINT FK_Discount_Shop FOREIGN KEY (ShopID) REFERENCES Shop(ShopID);
+
+ALTER TABLE VNPay_Bill
+ALTER COLUMN vnpAmount DECIMAL(10, 2) NOT NULL;
+
+
+
+
+ALTER TABLE Users
+ADD CONSTRAINT DF_Users_Status DEFAULT 1 FOR Status;
+
+drop trigger trg_InsertUser
+go
+
+
+CREATE TRIGGER trg_InsertUser
+ON Users
+INSTEAD OF INSERT
+AS
+BEGIN
+    DECLARE @UserID INT;
+    DECLARE @UserName VARCHAR(100);
+    DECLARE @Pass VARCHAR(255);
+    DECLARE @FullName NVARCHAR(50);
+    DECLARE @PhoneNumber VARCHAR(10);
+    DECLARE @Email VARCHAR(50);
+    DECLARE @Address NVARCHAR(50);
+    DECLARE @AvtImg NVARCHAR(200);
+    DECLARE @ShopID INT;
+    DECLARE @Role INT;
+    DECLARE @Status BIT; -- Khai báo biến Status
+
+    DECLARE insert_cursor CURSOR FOR
+    SELECT UserName, Pass, FullName, PhoneNumber, Email, Address, AvtImg, ShopID, Role, Status
+    FROM inserted; -- Thêm Status vào phần SELECT
+
+    OPEN insert_cursor;
+
+    FETCH NEXT FROM insert_cursor INTO @UserName, @Pass, @FullName, @PhoneNumber, @Email, @Address, @AvtImg, @ShopID, @Role, @Status;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        WHILE 1=1
+        BEGIN
+            SET @UserID = ABS(CHECKSUM(NEWID()) % 100000000);
+
+            IF NOT EXISTS (SELECT 1 FROM Users WHERE UserID = @UserID)
+            BEGIN
+                INSERT INTO Users (UserID, UserName, Pass, FullName, PhoneNumber, Email, Address, AvtImg, ShopID, Role, Status)
+                VALUES (@UserID, @UserName, @Pass, @FullName, @PhoneNumber, @Email, @Address, @AvtImg, @ShopID, @Role, @Status); -- Thêm Status 
+                BREAK;
+            END
+        END
+
+        FETCH NEXT FROM insert_cursor INTO @UserName, @Pass, @FullName, @PhoneNumber, @Email, @Address, @AvtImg, @ShopID, @Role, @Status;
+    END
+
+    CLOSE insert_cursor;
+    DEALLOCATE insert_cursor;
+END;
+
+GO
+EXEC sp_rename 'Order.Status', 'PaymentStatus', 'COLUMN';
+
+
+ALTER TABLE [Order]
+ADD Delivery_Status NVARCHAR(50);
+select * from [Order] order by CreatedDate DESC
+
+CREATE TABLE VNPay_Bill (
+    vnp_TxnRef INT NOT NULL,
+    vnp_Amount FLOAT,
+    vnp_PayDate NVARCHAR(50),
+    vnp_TransactionStatus INT,
+    PRIMARY KEY (vnp_TxnRef)
+);
+
+
+select * from VNPay_Bill
+
+Alter table [Order]
+Add IsRefund int default 0
+
+ALTER TABLE [Order]
+DROP CONSTRAINT DF__Order__PaymentID__2739D489;
+
+SELECT 
+    name, 
+    type_desc 
+FROM sys.objects 
+WHERE parent_object_id = OBJECT_ID('[Order]');
+
+ALTER TABLE [Order]
+DROP COLUMN PaymentID;
+
+ALTER TABLE [Order]
+ADD PaymentID NVARCHAR(8);
+
+Alter table [order]
+Add isRefund int default 0
+
+drop table VNPay_Bill
+
+CREATE TABLE VNPay_Bill (
+    vnpTxnRef VARCHAR(255) PRIMARY KEY,  
+    vnpAmount FLOAT NOT NULL,
+    vnpPayDate VARCHAR(255) NOT NULL,      
+    vnpTransactionStatus VARCHAR(50) NOT NULL,
+	OrderId int
+
+	Constraint FK_Order_ID FOREIGN KEY (OrderId) REFERENCES [Order](OrderId)
+);
+
+
+CREATE TABLE Refund (
+	RefundID INT IDENTITY(1,1)  PRIMARY KEY,
+    OrderId INT NOT NULL,
+    RefundReason nvarchar(MAX) NOT NULL,
+    RefundAmount DECIMAL(10, 2) NOT NULL,
+    RefundStatus VARCHAR(50) NOT NULL DEFAULT 'PENDING', 
+    created_at DATETIME DEFAULT GETDATE(),
+   
+	Constraint FK_Order_ID_Refund FOREIGN KEY (OrderId) REFERENCES [Order](OrderId)
+
+);
+ALTER TABLE Refund
+Add RefundReasonImg nvarchar(100)

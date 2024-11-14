@@ -311,7 +311,7 @@
             <c:set var="totalPages" value="${totalPages}" />
 
             <c:if test="${currentPage > 1}">
-                <a href="?page=${currentPage - 1}">&laquo;</a>
+                <a href="?shopId=${shop.getShopID()}&page=${currentPage - 1}">&laquo;</a>
             </c:if>
 
             <c:forEach var="i" begin="1" end="${totalPages}">
@@ -320,13 +320,13 @@
                         <span class="active">${i}</span>
                     </c:when>
                     <c:otherwise>
-                        <a href="?page=${i}">${i}</a>
+                        <a href="?shopId=${shop.getShopID()}&page=${i}">${i}</a>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
 
             <c:if test="${currentPage < totalPages}">
-                <a href="?page=${currentPage + 1}">&raquo;</a>
+                <a href="?shopId=${shop.getShopID()}&page=${currentPage + 1}">&raquo;</a>
             </c:if>
         </div>
 
