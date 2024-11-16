@@ -471,5 +471,23 @@ public class AccountDAO {
         }
         return email;
     }
+    
+        public String getEmailByShopID(int shopId) {
+        String email = null;
+        String sql = "SELECT Email FROM Users WHERE ShopID = ?";
+
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                email = rs.getString("Email");
+            }
+        } catch (Exception e) {
+            System.out.println("Error while retrieving email: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return email;
+    }
+
 
 }

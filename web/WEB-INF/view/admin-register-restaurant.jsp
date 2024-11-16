@@ -147,6 +147,14 @@
                             <span class="nav-link-text ms-1">Post Management</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white " href="/OrderingSystem/withdrawalmanagement">
+                            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="material-icons opacity-10">attach_money</i>
+                            </div>
+                            <span class="nav-link-text ms-1">Withdrawal Management</span>
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link text-white active bg-gradient-primary" href="admin-register-restaurant">
@@ -157,7 +165,7 @@
                         </a>
                     </li>
 
-                    
+
                     <li class="nav-item">
                         <a class="nav-link text-white " href="/OrderingSystem/logout">
                             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -177,14 +185,14 @@
                 <div class="container-fluid py-1 px-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                           <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark underline-home" href="/OrderingSystem/">home</a></li>
+                            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark underline-home" href="/OrderingSystem/">home</a></li>
 
 
                             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Register restaurant</li>
                         </ol>
                         <h6 class="font-weight-bolder mb-0">Register restaurant</h6>
                     </nav>
-                    
+
                 </div>
             </nav>
 

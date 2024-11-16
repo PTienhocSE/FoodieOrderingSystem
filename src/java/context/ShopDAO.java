@@ -24,6 +24,41 @@ public class ShopDAO {
         dbContext = new DBContext();
     }
 
+    
+    
+public double getShopWallet(int shopId) {
+    String query = "SELECT ShopWallet FROM shop WHERE ShopID = ?";
+
+    try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+        ps.setInt(1, shopId);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble("ShopWallet"); 
+            } else {
+                return 0.0; 
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return 0.0; 
+    }
+}
+    
+    public boolean updateShopWallet(int shopId, double amount) {
+        String query = "UPDATE shop SET ShopWallet = ShopWallet + ? WHERE ShopID = ?";
+
+        try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setDouble(1, amount); 
+            ps.setInt(2, shopId);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean createRestaurant(Shop r) {
         String query = "INSERT INTO Shop (Name, Description, Status, ShopImage, Address, TimeOpen, TimeClose) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
@@ -464,16 +499,15 @@ public class ShopDAO {
         String sql = "SELECT COUNT(ShopID) AS Waiting \n"
                 + "  FROM Shop \n"
                 + "  WHERE Status = 0";
-        try(Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)){
+        try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 restaurantCount = rs.getInt("Waiting");
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return restaurantCount;
     }
-    
+
 }

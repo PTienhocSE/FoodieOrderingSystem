@@ -5,12 +5,14 @@ package controller;
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 import context.OrderDAO;
+import context.ShopDAO;
 import context.VNPayBillDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -36,6 +38,7 @@ public class PaymentStatusServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, Exception {
+        HttpSession session = request.getSession(true);
         String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
         String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
         String vnp_TxnRef = request.getParameter("vnp_TxnRef");
@@ -45,13 +48,13 @@ public class PaymentStatusServlet extends HttpServlet {
         System.out.println("Response Code: " + vnp_ResponseCode);
         System.out.println("Transaction Status: " + vnp_TransactionStatus);
         System.out.println("Transaction Reference: " + vnp_TxnRef);
-        
+
         OrderDAO orderDAO = new OrderDAO();
         int orderID = orderDAO.getOrderIDByPaymentID(vnp_TxnRef);
-        
+
         VNPayBillDAO vnpayDAO = new VNPayBillDAO();
-        VNPay_Bill bill = new VNPay_Bill(vnp_TxnRef, Float.parseFloat(vnp_Amount)/100,vnp_PayDate,vnp_TransactionStatus, orderID);
-        
+        VNPay_Bill bill = new VNPay_Bill(vnp_TxnRef, Float.parseFloat(vnp_Amount) / 100, vnp_PayDate, vnp_TransactionStatus, orderID);
+
         vnpayDAO.createVNPayBill(bill);
 
         OrderDAO dao = new OrderDAO();
@@ -60,7 +63,17 @@ public class PaymentStatusServlet extends HttpServlet {
 
             dao.updateOrderPaymentStatus(paymentID, "PAID");
 
+            int shopID = orderDAO.getShopIDByPaymentID(paymentID);
+
+            ShopDAO shopDAO = new ShopDAO();
+            boolean success = shopDAO.updateShopWallet(shopID, Float.parseFloat(vnp_Amount) / 100);
+            if (success) {
+                System.out.println("Shop wallet updated successfully for shopId: " + shopID);
+            } else {
+                System.out.println("Failed to update shop wallet for shopId: " + shopID);
+            }
             request.getRequestDispatcher("WEB-INF/view/paymentStatus.jsp").forward(request, response);
+            session.removeAttribute("paymentID");
 
         } else {
             dao.updateOrderPaymentStatus(paymentID, "FAILED");

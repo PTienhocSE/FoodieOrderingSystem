@@ -103,7 +103,14 @@
                             <span class="nav-link-text ms-1">Post Management</span>
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link text-white " href="/OrderingSystem/withdrawalmanagement">
+                            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="material-icons opacity-10">attach_money</i>
+                            </div>
+                            <span class="nav-link-text ms-1">Withdrawal Management</span>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-white " href="admin-register-restaurant">
                             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -141,7 +148,7 @@
                         </ol>
                         <h6 class="font-weight-bolder mb-0">Revenue management</h6>
                     </nav>
-                    
+
                 </div>
             </nav>
 

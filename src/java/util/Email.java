@@ -123,6 +123,120 @@ public class Email {
             return false;
         }
     }
+    
+        public static boolean sendEmailNotifyingShopRequest(String email, double requestedAmount, String bankAccount) {
+
+        String toEmail = email;
+
+        String content = "Your withdrawal request is currently pending.\n\n"
+                + "Amount: " + requestedAmount + " VND\n"
+                + "Bank Account: " + bankAccount + "\n"
+                + "We are currently reviewing your request, and we will notify you once it is processed.";
+
+        try {
+            Properties props = new Properties();
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.debug", "true");
+
+            Session session = Session.getInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(fromEmail, password);
+                }
+            });
+
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(fromEmail));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+
+            message.setSubject("Withdrawal Request Status Update");
+            message.setText("Dear customer,\n\n" + content + "\n\nThank you for choosing us.\n\nBest regards,\nFoodie Ordering System");
+
+            Transport.send(message);
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+        
+        public static boolean sendEmailAcceptingShopRequest(String email, double requestedAmount) {
+    String toEmail = email;
+
+    String content = "Your withdrawal request has been successfully approved.\n\n"
+            + "Amount: " + requestedAmount + " VND\n"
+            + "Your request is now being processed, and the funds will be transferred soon.";
+
+    try {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromEmail, password);
+            }
+        });
+
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(fromEmail));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+
+        message.setSubject("Withdrawal Request Approved");
+        message.setText("Dear customer,\n\n" + content + "\n\nThank you for choosing us.\n\nBest regards,\nFoodie Ordering System");
+
+        Transport.send(message);
+        return true;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+        
+        public static boolean sendEmailRejectingShopRequest(String email) {
+    String toEmail = email;
+
+    String content = "Your withdrawal request has been rejected.\n\n"
+            + "We regret to inform you that your request could not be processed. Please review your account or contact support for further assistance.";
+
+    try {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromEmail, password);
+            }
+        });
+
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(fromEmail));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+
+        message.setSubject("Withdrawal Request Rejected");
+        message.setText("Dear customer,\n\n" + content + "\n\nThank you for choosing us.\n\nBest regards,\nFoodie Ordering System");
+
+        Transport.send(message);
+        return true;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
 
     public static boolean sendEmailNotifyingReward(String email, String content) {
 

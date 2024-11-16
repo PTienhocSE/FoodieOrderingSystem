@@ -29,8 +29,6 @@ import model.Product;
 @WebServlet(name = "CheckoutServlet", urlPatterns = {"/checkout"})
 public class CheckoutServlet extends HttpServlet {
 
-    String paymentID = Config.getRandomNumber(8);
-
     public CheckoutServlet() {
         super();
         System.out.println("CheckoutServlet initialized!");
@@ -43,6 +41,7 @@ public class CheckoutServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         DiscountDAO discountDAO = new DiscountDAO();
         RewardRedemptionDAO rwDAO = new RewardRedemptionDAO();
+        String paymentID = Config.getRandomNumber(8);
 
         try {
             HttpSession session = request.getSession(true);
@@ -71,12 +70,24 @@ public class CheckoutServlet extends HttpServlet {
                 }
 
                 Double discountPercentage = discountDAO.getDiscountPercentageByDiscountCode(discountCode);
+                Double minimumAmount = discountDAO.getMinimumAmountByDiscountCode(discountCode);
+                Double maximumAmount = discountDAO.getMaximumDiscountByDiscountCode(discountCode);
                 double discountAmount = 0;
 
                 if (discountPercentage != null && discountPercentage > 0) {
-                    discountAmount = totalAmount * (discountPercentage / 100);
-                    totalAmount -= discountAmount;
-                    System.out.println("Applied discount: " + discountPercentage + "%, Amount after discount: " + totalAmount);
+                    if (totalAmount >= minimumAmount) {
+                        discountAmount = totalAmount * (discountPercentage / 100);
+
+                        if (discountAmount > maximumAmount) {
+                            discountAmount = maximumAmount;
+                            System.out.println("Discount capped at maximum amount: " + maximumAmount);
+                        }
+
+                        totalAmount -= discountAmount;
+                        System.out.println("Applied discount: " + discountPercentage + "%, Amount after discount: " + totalAmount);
+                    } else {
+                        System.out.println("Total amount is less than the minimum amount required for the discount.");
+                    }
                 } else {
                     System.out.println("No valid discount code applied.");
                 }
@@ -105,7 +116,7 @@ public class CheckoutServlet extends HttpServlet {
                 orderDAO.updateOrderTotalAmount(order.getOrderId(), totalAmount);
 
                 int pointReward = (int) totalAmount / 1000;
-                int userIdInt = acc.getUserID(); // Lấy userId từ đối tượng Account đã lưu trong session
+                int userIdInt = acc.getUserID();
 
                 if (rwDAO.isRewardRegistered(userIdInt)) {
                     rwDAO.updatePoints(userIdInt, pointReward);
@@ -121,7 +132,7 @@ public class CheckoutServlet extends HttpServlet {
                     response.sendRedirect("/OrderingSystem/order-history");
                 } else if ("vnpay".equals(payment_method)) {
                     clearCart(userIdInt, cartItemsForOrder);
-                    processVNPAY(request, response, Collections.singletonList(order), totalAmount);
+                    processVNPAY(request, response, Collections.singletonList(order), totalAmount, paymentID);
                 }
             } else {
                 response.sendRedirect("/OrderingSystem/");
@@ -150,7 +161,7 @@ public class CheckoutServlet extends HttpServlet {
         }
     }
 
-    private void processVNPAY(HttpServletRequest request, HttpServletResponse response, List<OrderDTO> orders, double totalAmount) throws IOException {
+    private void processVNPAY(HttpServletRequest request, HttpServletResponse response, List<OrderDTO> orders, double totalAmount, String paymentID) throws IOException {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
@@ -231,7 +242,7 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         Set<Integer> shopIds = new HashSet<>();
-        double totalAmount = 0;  
+        double totalAmount = 0;
 
         for (String productID : selected) {
             try {
@@ -264,6 +275,15 @@ public class CheckoutServlet extends HttpServlet {
 
         session.setAttribute("cart", cartDTO);
         session.setAttribute("size", cartDTO.size());
+
+        session.removeAttribute("payment_method");
+        session.removeAttribute("deliveryOption");
+        session.removeAttribute("phone");
+        session.removeAttribute("address");
+        session.removeAttribute("finalAmount");
+        session.removeAttribute("discountAmount");
+        session.removeAttribute("originalAmount");
+        session.removeAttribute("discountCode");
 
         Object user = session.getAttribute("user");
         if (user != null) {

@@ -93,6 +93,15 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link text-white " href="/OrderingSystem/withdrawalmanagement">
+                            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="material-icons opacity-10">attach_money</i>
+                            </div>
+                            <span class="nav-link-text ms-1">Withdrawal Management</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link text-white " href="admin-register-restaurant">
                             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                                 <i class="material-icons opacity-10">restaurant</i>
@@ -101,7 +110,7 @@
                         </a>
                     </li>
 
-                    
+
                     <li class="nav-item">
                         <a class="nav-link text-white " href="/OrderingSystem/logout">
                             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -170,15 +179,16 @@
                                         <td>${post.createdDate}</td>
                                         <td>
                                             <div class="d-flex justify-content-center align-items-center">
-                                                <a class="btn btn-primary btn-sm me-2 text-nowrap" href="postDetails?postID=${post.postID}">View Detail</a>
                                                 <c:choose>
                                                     <c:when test="${post.status}">
+                                                        <a class="btn btn-primary btn-sm me-2 text-nowrap" href="postDetails?postID=${post.postID}">View Detail</a>
                                                         <a class="btn btn-danger btn-sm" href="admin-post?action=lockIllegalPost&id=${post.postID}" onclick="return confirmDelete('${post.postID}')">Lock</a>
                                                     </c:when>
                                                     <c:otherwise>
-                                                    <a class="btn btn-warning btn-sm"  href="admin-post?action=unlockPost&id=${post.postID}">Unlock</a>
-                                                </c:otherwise>
+                                                        <a class="btn btn-warning btn-sm"  href="admin-post?action=unlockPost&id=${post.postID}">Unlock</a>
+                                                    </c:otherwise>
                                                 </c:choose>
+
                                             </div>
                                         </td>
                                     </tr>
@@ -200,17 +210,17 @@
 
         <!-- JavaScript để xác nhận xóa và hiển thị thông báo -->
         <script>
-                                                        function confirmDelete(postID) {
-                                                            var confirmAction = confirm("Are you sure you want to delete post #" + postID + "?");
-                                                            if (confirmAction) {
-                                                                // Hiển thị khối thông báo nếu người dùng xác nhận
-                                                                document.getElementById('msg-block').style.display = 'block';
-                                                                return true;
-                                                            } else {
-                                                                // Người dùng hủy, không hiển thị gì
-                                                                return false;
+                                                            function confirmDelete(postID) {
+                                                                var confirmAction = confirm("Are you sure you want to delete post #" + postID + "?");
+                                                                if (confirmAction) {
+                                                                    // Hiển thị khối thông báo nếu người dùng xác nhận
+                                                                    document.getElementById('msg-block').style.display = 'block';
+                                                                    return true;
+                                                                } else {
+                                                                    // Người dùng hủy, không hiển thị gì
+                                                                    return false;
+                                                                }
                                                             }
-                                                        }
         </script>
     </body>
 </html>

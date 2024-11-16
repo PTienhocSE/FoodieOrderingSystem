@@ -35,7 +35,7 @@ public class RefundDAO {
             statement.setString(2, refund.getRefundReason());
             statement.setBigDecimal(3, refund.getRefundAmount());
             statement.setString(4, refund.getRefundStatus());
-            statement.setInt(1, refund.getRefundOption());
+            statement.setInt(5, refund.getRefundOption());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {

@@ -339,6 +339,25 @@ public class OrderDAO {
         return null;
     }
 
+    public Integer getShopIDByPaymentID(String paymentID) {
+        String query = "SELECT DISTINCT p.ShopID "
+                + "FROM [Order] o "
+                + "JOIN [OrderItem] oi ON o.OrderID = oi.OrderID "
+                + "JOIN [Product] p ON oi.ProductID = p.ProductID "
+                + "WHERE o.PaymentID = ?";
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, paymentID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("ShopID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("No shop found for the payment ID");
+        return null;
+    }
+
     public List<Order> getOrderListByShopID(int shopId) {
         List<Order> orders = new ArrayList<>();
         String query = "SELECT DISTINCT o.* "
@@ -412,6 +431,174 @@ public class OrderDAO {
         }
         System.out.println("No orders found for the shop with the specified status");
         return null;
+    }
+
+    public List<Order> getRecentOrdersByShopID(int shopId) {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT TOP 5 o.* " // Nếu bạn dùng MySQL, thay "TOP 5" bằng "LIMIT 5"
+                + "FROM [Order] o "
+                + "JOIN OrderItem oi ON o.OrderID = oi.OrderID "
+                + "JOIN Product p ON oi.ProductID = p.ProductID "
+                + "WHERE p.ShopID = ? AND o.PaymentStatus LIKE 'PAID' "
+                + "ORDER BY o.CreatedDate DESC";
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, shopId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order order = new Order(
+                        rs.getInt("OrderID"),
+                        rs.getInt("UserID"),
+                        rs.getString("PaymentStatus"),
+                        rs.getString("DeliveryStatus"),
+                        rs.getString("Address"),
+                        rs.getDate("CreatedDate"),
+                        rs.getString("DeliveryOption"),
+                        rs.getTimestamp("TimePickup"),
+                        rs.getDouble("TotalAmount"),
+                        rs.getInt("DiscountID"),
+                        rs.getString("PaymentOption"),
+                        rs.getInt("isRefund"),
+                        rs.getString("Phone")
+                );
+                orders.add(order);
+            }
+            return orders;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("No recent orders found for the shop");
+        return null;
+    }
+
+    public List<Double> getMonthlyAmount() {
+        List<Double> monthlyAmounts = new ArrayList<>();
+        String query = "SELECT SUM(o.TotalAmount) AS TotalAmount, MONTH(o.CreatedDate) AS Month "
+                + "FROM [Order] o "
+                + "WHERE YEAR(o.CreatedDate) = YEAR(GETDATE()) "
+                + "GROUP BY MONTH(o.CreatedDate) "
+                + "ORDER BY MONTH(o.CreatedDate)";
+
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                monthlyAmounts.add(rs.getDouble("TotalAmount"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return monthlyAmounts;
+    }
+
+    public double getTotalMoneyByMonth(int shopId, int month) throws Exception {
+        double totalAmount = 0.0;
+        String query = "SELECT SUM(o.TotalAmount) AS TotalAmount "
+                + "FROM [Order] o "
+                + "WHERE o.ShopID = ? AND MONTH(o.CreatedDate) = ? AND YEAR(o.CreatedDate) = YEAR(GETDATE())";
+
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, shopId);
+            ps.setInt(2, month);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                totalAmount = rs.getDouble("TotalAmount");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalAmount;
+    }
+
+    public int getOrderCountByShopID(int shopId) {
+        String query = "SELECT COUNT(DISTINCT o.OrderID) AS OrderCount "
+                + "FROM [Order] o "
+                + "JOIN OrderItem oi ON o.OrderID = oi.OrderID "
+                + "JOIN Product p ON oi.ProductID = p.ProductID "
+                + "WHERE p.ShopID = ? AND o.PaymentStatus LIKE 'PAID' ";
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("OrderCount"); // Return the order count
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("No orders found for the shop");
+        return 0; // If no orders are found
+    }
+
+    public double getTotalMoneyToday() {
+        String query = "SELECT SUM(o.TotalAmount) AS TotalToday "
+                + "FROM [Order] o "
+                + "WHERE CAST(o.CreatedDate AS DATE) = CAST(GETDATE() AS DATE) "
+                + "AND o.PaymentStatus LIKE 'PAID' "
+                + "AND o.isRefund = 0"; // Removed the extra AND
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("TotalToday");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+    public double getTotalMoneyThisMonth() {
+        String query = "SELECT SUM(o.TotalAmount) AS TotalThisMonth "
+                + "FROM [Order] o "
+                + "WHERE MONTH(o.CreatedDate) = MONTH(GETDATE()) "
+                + "AND YEAR(o.CreatedDate) = YEAR(GETDATE()) "
+                + "AND o.PaymentStatus LIKE 'PAID' "
+                + "AND o.isRefund = 0";
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("TotalThisMonth");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+    public double getTotalMoneyYesterday() {
+        String query = "SELECT SUM(o.TotalAmount) AS TotalYesterday "
+                + "FROM [Order] o "
+                + "WHERE CAST(o.CreatedDate AS DATE) = CAST(DATEADD(DAY, -1, GETDATE()) AS DATE) "
+                + "AND o.PaymentStatus LIKE 'PAID'"
+                + "AND o.isRefund = 0";
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("TotalYesterday");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+    public double getTotalMoneyLastMonth() {
+        String query = "SELECT SUM(o.TotalAmount) AS TotalLastMonth "
+                + "FROM [Order] o "
+                + "WHERE MONTH(o.CreatedDate) = MONTH(DATEADD(MONTH, -1, GETDATE())) "
+                + "AND YEAR(o.CreatedDate) = YEAR(DATEADD(MONTH, -1, GETDATE())) "
+                + "AND o.PaymentStatus LIKE 'PAID' "
+                + "AND o.isRefund = 0";  // Lọc các đơn hàng không bị hoàn trả
+        try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("TotalLastMonth");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0;
     }
 
     public Order getOrderByOrderID(int orderId) {
@@ -574,6 +761,24 @@ public class OrderDAO {
 
         return email;
     }
+    
+        public String getEmailByUserID(int userID) {
+        String email = null;
+        String sql = "SELECT Email FROM Users WHERE UserID = ?";
+
+        try (Connection conn = new DBContext().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    email = rs.getString("Email");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return email;
+    }
 
     public String getDeliveryStatusByOrderID(int orderId) {
         String deliveryStatus = null;
@@ -688,7 +893,7 @@ public class OrderDAO {
             if (currentMonthRevenue != null && previousMonthRevenue != null && previousMonthRevenue != 0) {
                 double percentageChange = ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100;
                 if (percentageChange > 0) {
-                    result = "Increased "+ String.format("%.2f", percentageChange) + "%than last month";
+                    result = "Increased " + String.format("%.2f", percentageChange) + "%than last month";
                 } else {
                     result = "Decreased " + String.format("%.2f", Math.abs(percentageChange)) + "% than last month ";
                 }
@@ -700,8 +905,7 @@ public class OrderDAO {
         }
         return result;
     }
-    
-    
+
     // admin- getRevenueByShop
     public List<ShopRevenue> getRevenueByShop() {
         String query = """
@@ -743,13 +947,11 @@ public class OrderDAO {
                 ShopRevenue revenue = new ShopRevenue(shopID, shopName, shopOwner, vnPayRevenue, codRevenue, totalRevenue);
                 revenueList.add(revenue);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return revenueList;
     }
-    
 
     public static void main(String[] args) {
         OrderDAO orderDAO = new OrderDAO();
@@ -760,13 +962,76 @@ public class OrderDAO {
 
         String revenueChange = orderDAO.getMonthlyRevenueChangePercentage();
         System.out.println(revenueChange);
-        
-        
+
         System.out.println("/n");
         List<ShopRevenue> shops = orderDAO.getRevenueByShop();
-        for(ShopRevenue s : shops){
+        for (ShopRevenue s : shops) {
             System.out.println(s.toString());
         }
     }
+    
+    
+    public List<Order> getPagedOrderListByShopIDAndStatus(int shopId, String status, int page, int size) {
+    List<Order> orders = new ArrayList<>();
+    String query = "SELECT DISTINCT o.* "
+            + "FROM [Order] o "
+            + "JOIN OrderItem oi ON o.OrderID = oi.OrderID "
+            + "JOIN Product p ON oi.ProductID = p.ProductID "
+            + "WHERE p.ShopID = ? AND o.DeliveryStatus = ? AND o.PaymentStatus LIKE 'PAID' "
+            + "ORDER BY o.CreatedDate DESC "
+            + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"; 
+
+    try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setInt(1, shopId);
+        ps.setString(2, status);
+        ps.setInt(3, (page - 1) * size); 
+        ps.setInt(4, size); 
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Order order = new Order(
+                    rs.getInt("OrderID"),
+                    rs.getInt("UserID"),
+                    rs.getString("PaymentStatus"),
+                    rs.getString("DeliveryStatus"),
+                    rs.getString("Address"),
+                    rs.getDate("CreatedDate"),
+                    rs.getString("DeliveryOption"),
+                    rs.getTimestamp("TimePickup"),
+                    rs.getDouble("TotalAmount"),
+                    rs.getInt("DiscountID"),
+                    rs.getString("PaymentOption"),
+                    rs.getInt("isRefund"),
+                    rs.getString("Phone")
+            );
+            orders.add(order);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return orders;
+}
+    
+    public int getOrderCountByShopIDAndStatus(int shopId, String status) {
+    String query = "SELECT COUNT(DISTINCT o.OrderID) AS Total "
+            + "FROM [Order] o "
+            + "JOIN OrderItem oi ON o.OrderID = oi.OrderID "
+            + "JOIN Product p ON oi.ProductID = p.ProductID "
+            + "WHERE p.ShopID = ? AND o.DeliveryStatus = ? AND o.PaymentStatus LIKE 'PAID'";
+
+    try (Connection con = dbContext.getConnection(); PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setInt(1, shopId);
+        ps.setString(2, status);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("Total");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return 0; // Nếu có lỗi, trả về 0
+}
+
+
 
 }

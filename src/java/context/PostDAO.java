@@ -30,7 +30,7 @@ public class PostDAO {
             return conn != null && !conn.isClosed();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false; 
+            return false;
         }
     }
 
@@ -39,11 +39,11 @@ public class PostDAO {
         String query = "SELECT u.AvtImg FROM Post p INNER JOIN Users u ON p.UserID = u.UserID WHERE p.PostID = ?";
 
         try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, postID);  
+            ps.setInt(1, postID);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    avatarImg = rs.getString("AvtImg");  
+                    avatarImg = rs.getString("AvtImg");
                 }
             }
         } catch (SQLException e) {
@@ -55,26 +55,25 @@ public class PostDAO {
     }
 
     public int getUserIDByPostId(int postID) throws Exception {
-    int userID = 0;  
-    String query = "SELECT UserID FROM Post WHERE PostID = ?";
+        int userID = 0;
+        String query = "SELECT UserID FROM Post WHERE PostID = ?";
 
-    try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
-        ps.setInt(1, postID); 
+        try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, postID);
 
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                userID = rs.getInt("UserID");  
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    userID = rs.getInt("UserID");
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new Exception("Error retrieving UserID by PostID: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        throw new Exception("Error retrieving UserID by PostID: " + e.getMessage());
+
+        return userID;
     }
 
-    return userID;
-}
-
-    
     public List<Post> getAllPostsHaveFullNameAndAvtImg() throws Exception {
         List<Post> posts = new ArrayList<>();
         String query = "SELECT * FROM Post WHERE status = 1 ORDER BY CreatedDate DESC";
@@ -90,24 +89,24 @@ public class PostDAO {
                         rs.getString("Heading"),
                         rs.getString("Content"),
                         rs.getTimestamp("CreatedDate"),
-                        rs.getBoolean("status") 
+                        rs.getBoolean("status")
                 );
 
                 String fullName = userDAO.getFullNameByUserId(post.getUserID());
                 if (fullName != null) {
                     post.setUserFullName(fullName);
                 } else {
-                    post.setUserFullName("Unknown User"); 
+                    post.setUserFullName("Unknown User");
                 }
 
                 String avatarURL = userDAO.getAvatarByUserId(post.getUserID());
                 if (avatarURL != null) {
                     post.setAvtUserImg(avatarURL);
                 } else {
-                    post.setAvtUserImg("default-avatar.png"); 
+                    post.setAvtUserImg("default-avatar.png");
                 }
 
-                posts.add(post);  
+                posts.add(post);
             }
 
         } catch (SQLException e) {
@@ -115,7 +114,7 @@ public class PostDAO {
             throw new Exception("Error retrieving posts: " + e.getMessage());
         }
 
-        System.out.println("Number of posts retrieved: " + posts.size()); 
+        System.out.println("Number of posts retrieved: " + posts.size());
         return posts;
     }
 
@@ -333,55 +332,53 @@ public class PostDAO {
         }
         return avatarImg;
     }
-    
 
-    
     public List<Post> getPostsByUserID(int userId) throws Exception {
-    List<Post> posts = new ArrayList<>();
-    String query = "SELECT * FROM Post WHERE status = 1 AND UserID = ? ORDER BY CreatedDate DESC";
-    System.out.println("Executing query: " + query);
+        List<Post> posts = new ArrayList<>();
+        String query = "SELECT * FROM Post WHERE status = 1 AND UserID = ? ORDER BY CreatedDate DESC";
+        System.out.println("Executing query: " + query);
 
-    try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
-        ps.setInt(1, userId); // Đặt tham số cho PreparedStatement
+        try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userId); // Đặt tham số cho PreparedStatement
 
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Post post = new Post(
-                        rs.getInt("PostID"),
-                        rs.getInt("UserID"),
-                        rs.getString("ImgURL"),
-                        rs.getString("Heading"),
-                        rs.getString("Content"),
-                        rs.getTimestamp("CreatedDate"),
-                        rs.getBoolean("status")
-                );
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Post post = new Post(
+                            rs.getInt("PostID"),
+                            rs.getInt("UserID"),
+                            rs.getString("ImgURL"),
+                            rs.getString("Heading"),
+                            rs.getString("Content"),
+                            rs.getTimestamp("CreatedDate"),
+                            rs.getBoolean("status")
+                    );
 
-                String fullName = userDAO.getFullNameByUserId(post.getUserID());
-                if (fullName != null) {
-                    post.setUserFullName(fullName);
-                } else {
-                    post.setUserFullName("Unknown User");
+                    String fullName = userDAO.getFullNameByUserId(post.getUserID());
+                    if (fullName != null) {
+                        post.setUserFullName(fullName);
+                    } else {
+                        post.setUserFullName("Unknown User");
+                    }
+
+                    String avatarURL = userDAO.getAvatarByUserId(post.getUserID());
+                    if (avatarURL != null) {
+                        post.setAvtUserImg(avatarURL);
+                    } else {
+                        post.setAvtUserImg("default-avatar.png");
+                    }
+
+                    posts.add(post);
                 }
-
-                String avatarURL = userDAO.getAvatarByUserId(post.getUserID());
-                if (avatarURL != null) {
-                    post.setAvtUserImg(avatarURL);
-                } else {
-                    post.setAvtUserImg("default-avatar.png");
-                }
-
-                posts.add(post);
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new Exception("Error retrieving posts: " + e.getMessage());
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
-        throw new Exception("Error retrieving posts: " + e.getMessage());
+        System.out.println("Number of posts retrieved for user ID " + userId + ": " + posts.size());
+        return posts;
     }
-
-    System.out.println("Number of posts retrieved for user ID " + userId + ": " + posts.size());
-    return posts;
-}
 
     // Qhuy lock illegal post
     public boolean lockIllegalPost(int postID) {
@@ -401,7 +398,7 @@ public class PostDAO {
         }
         return flag;
     }
-    
+
     // Admin - unlockPost
     public boolean unlockPost(int postID) {
         boolean flag = false;
@@ -422,38 +419,54 @@ public class PostDAO {
     }
 
     // Admin function - getNumberOfProduct
-    public int getNumberOfPosts(){
+    public int getNumberOfPosts() {
         int postCount = 0;
         String sql = "SELECT COUNT(*) FROM Post";
-        try(Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)){
+        try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 postCount = rs.getInt(1);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return postCount;
     }
-    
+
     // Admin function - getNumberOfProduct
-    public int getNumberOfLockedPosts(){
+    public int getNumberOfLockedPosts() {
         int postCount = 0;
         String sql = "SELECT COUNT(*) AS LockedCount FROM Post WHERE Status = 0";
-        try(Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)){
+        try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 postCount = rs.getInt(1);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return postCount;
     }
-    
-    // Admin get all post kể cả inactive
+
+    public String formatContent(String content) {
+        String[] words = content.split(" ");
+        StringBuilder formattedContent = new StringBuilder();
+
+        // Lấy tối đa 7 từ đầu tiên
+        int limit = Math.min(7, words.length);
+        for (int i = 0; i < limit; i++) {
+            formattedContent.append(words[i]).append(" ");
+        }
+
+        // Thêm dấu "..." nếu nội dung có nhiều hơn 7 từ
+        if (words.length > 7) {
+            formattedContent.append("...");
+        }
+
+        return formattedContent.toString().trim();
+    }
+
+// Admin get all post kể cả inactive
     public List<Post> getAllPostsData() throws Exception {
         List<Post> posts = new ArrayList<>();
         String query = "SELECT * FROM Post ORDER BY CreatedDate DESC";
@@ -461,13 +474,12 @@ public class PostDAO {
 
         try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Post post;
-                post = new Post(
+                Post post = new Post(
                         rs.getInt("PostID"),
                         rs.getInt("UserID"),
                         rs.getString("ImgURL"),
                         rs.getString("Heading"),
-                        rs.getString("Content"),
+                        formatContent(rs.getString("Content")), // Gọi hàm formatContent để định dạng nội dung
                         rs.getTimestamp("CreatedDate"),
                         rs.getBoolean("status")
                 );

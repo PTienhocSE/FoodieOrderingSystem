@@ -26,6 +26,15 @@
         <link href="./assets/css/order-history.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="./assets/js/order-history.js"></script>
+        <script>
+    // Hàm cập nhật số lượng và giá trị
+    document.addEventListener('DOMContentLoaded', function () {
+        var quantityInputs = document.querySelectorAll('.quantity');
+        quantityInputs.forEach(function (input) {
+            updateAmount(input);
+        });
+    });
+        </script>
     </head>
     <body>
         <%@ include file="/include/header.jsp" %>

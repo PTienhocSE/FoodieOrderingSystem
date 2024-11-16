@@ -1,0 +1,19 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Nov 14, 2024, 3:36:15 PM
+    Author     : phuct
+*/
+
+main.main-content.position-relative.border-radius-lg {
+    margin: 0;
+    padding: 0;
+}
+.navbar .nav-link {
+    margin: 0px 18px;
+    color: #5eae53;
+    font-size: 18px;
+    padding: 0px !important;
+}

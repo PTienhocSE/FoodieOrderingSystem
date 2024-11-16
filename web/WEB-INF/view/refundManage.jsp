@@ -46,6 +46,11 @@
                         <i class="ti-timer"></i> Discount
                     </a>
                 </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/OrderingSystem/moneyrequest">
+                        <i class="ti-timer"></i> Money Request
+                    </a>
+                </li>
             </ul>
         </div>
 

@@ -162,7 +162,8 @@
                                                 <fmt:formatNumber value="${originalAmount}" type="number" pattern="#,###"/>
                                             </td>
                                         </tr>
-                                        <c:if test="${not empty discountAmount}">
+                                        <!-- Display Discount only if discountAmount > 0 -->
+                                        <c:if test="${not empty discountAmount && discountAmount > 0}">
                                             <tr>
                                                 <td style="color: #5eae53; font-weight: 700;" colspan="3">Discount</td>
                                                 <td style="color: #5eae53; font-weight: 700;">
@@ -170,7 +171,8 @@
                                                 </td>
                                             </tr>
                                         </c:if>
-                                        <c:if test="${not empty finalAmount}">
+                                        <!-- Display Total After Discount only if finalAmount > 0 -->
+                                        <c:if test="${not empty finalAmount && finalAmount > 0}">
                                             <tr>
                                                 <td style="color: #ff6b6b; font-weight: 700;" colspan="3">Total After Discount</td>
                                                 <td style="color: #ff6b6b; font-weight: 700;">
@@ -196,7 +198,7 @@
                                         ${errorMessage}
                                     </div>
                                 </c:if>
-                                
+
                             </div>
                         </div>
                     </form>

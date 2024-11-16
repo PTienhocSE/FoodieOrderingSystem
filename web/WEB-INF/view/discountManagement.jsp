@@ -1,9 +1,3 @@
-<%-- 
-    Document   : refundManage
-    Created on : Oct 19, 2024, 4:21:16 PM
-    Author     : phuct
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8" import="model.*,java.util.*,util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -21,7 +15,6 @@
         <link rel="stylesheet" href="./assets/css/order-manage.css">
         <link rel="stylesheet" href="./assets/css/refundManage.css">
         <link rel="stylesheet" href="./assets/css/discountManage.css">
-
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </head>
@@ -43,6 +36,11 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="#">
                         <i class="ti-timer"></i> Discount
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/OrderingSystem/moneyrequest">
+                        <i class="ti-timer"></i> Money Request
                     </a>
                 </li>
             </ul>
@@ -81,6 +79,14 @@
                                         <label for="discountPercentage" class="form-label">Discount Percentage</label>
                                         <input type="number" class="form-control" id="discountPercentage" name="discountPercentage" required min="0" max="100">
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="minimumAmount" class="form-label">Minimum Amount</label>
+                                        <input type="number" class="form-control" id="minimumAmount" name="minimumAmount" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="maximumAmount" class="form-label">Maximum Discount</label>
+                                        <input type="number" class="form-control" id="maximumAmount" name="maximumAmount" required min="0">
+                                    </div>
                                     <button type="submit" class="btn btn-primary">Create Discount</button>
                                 </form>
                             </div>
@@ -115,11 +121,11 @@
                                     <button class="btn btn-warning btn-sm" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#updateDiscountModal" 
-                                            onclick="setUpdateModal('${discount.discountID}', '${discount.discountCODE}', ${discount.numberOfDiscount}, ${discount.discountPercentage})">
+                                            onclick="setUpdateModal('${discount.discountID}', '${discount.discountCODE}', ${discount.numberOfDiscount}, ${discount.discountPercentage}, ${discount.minimumAmount}, ${discount.maximumAmount})">
                                         Update
                                     </button>
                                     <button class="btn ${discount.status == 1 ? 'btn-danger' : 'btn-success'} btn-sm" 
-                                            onclick="${discount.status == 1 ? 'deleteDiscount' : 'unlockDiscount'}(${discount.discountID})">
+                                            onclick="toggleDiscountStatus(${discount.discountID}, ${discount.status})">
                                         ${discount.status == 1 ? 'Lock' : 'Unlock'}
                                     </button>
                                 </td>
@@ -130,7 +136,8 @@
             </div>
 
             <%@ include file="/include/footer.jsp" %>
-
+            
+            <!-- Modal Update Discount -->
             <div class="modal fade" id="updateDiscountModal" tabindex="-1" aria-labelledby="updateDiscountModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -144,15 +151,15 @@
                                 <input type="hidden" name="discountID" id="updateDiscountID" value="">
                                 <div class="mb-3">
                                     <label for="updateDiscountCode" class="form-label">Discount Code</label>
-                                    <input type="text" class="form-control" id="updateDiscountCode" name="discountCode" value="" readonly>
+                                    <input type="text" class="form-control" id="updateDiscountCode" name="discountCode" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="minimumAmount" class="form-label">Minimum Amount</label>
-                                    <input type="number" class="form-control" id="minimumAmount" name="minimumAmount" required>
+                                    <input type="number" class="form-control" id="updateminimumAmount" name="minimumAmount" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="maximumAmount" class="form-label">Maximum Discount</label>
-                                    <input type="number" class="form-control" id="maximumAmount" name="maximumAmount" required min="0" max="100">
+                                    <input type="number" class="form-control" id="updatemaximumAmount" name="maximumAmount" required min="0">
                                 </div>
                                 <div class="mb-3">
                                     <label for="updateVoucherCount" class="form-label">Total Vouchers</label>
@@ -168,25 +175,34 @@
                     </div>
                 </div>
             </div>
-
-            <script>
-                function generateDiscountCode() {
-                    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                    let result = '';
-                    for (let i = 0; i < 8; i++) {
-                        const randomIndex = Math.floor(Math.random() * characters.length);
-                        result += characters.charAt(randomIndex);
-                    }
-                    document.getElementById('discountCode').value = result;
-                }
-
-                function setUpdateModal(discountID, discountCode, numberOfDiscount, discountPercentage) {
-                    document.getElementById('updateDiscountID').value = discountID;
-                    document.getElementById('updateDiscountCode').value = discountCode;
-                    document.getElementById('updateVoucherCount').value = numberOfDiscount;
-                    document.getElementById('updateDiscountPercentage').value = discountPercentage;
-                }
-            </script>
         </div>
+
+        <script>
+            function generateDiscountCode() {
+                var discountCode = 'DIS' + Math.random().toString(36).substring(2, 10).toUpperCase();
+                document.getElementById('discountCode').value = discountCode;
+            }
+
+            function toggleDiscountStatus(discountID, currentStatus) {
+                var action = currentStatus === 1 ? 'lockDiscount' : 'unlockDiscount'; // action dựa trên status hiện tại
+                $.post('discountManage', {
+                    action: action,
+                    discountID: discountID
+                }, function (response) {
+                    location.reload(); // reload lại trang sau khi hành động được thực hiện
+                }).fail(function (xhr, status, error) {
+                    alert("Error: " + error); // Nếu có lỗi thì sẽ hiển thị thông báo lỗi
+                });
+            }
+
+            function setUpdateModal(discountID, discountCode, voucherCount, discountPercentage, minimumAmount, maximumAmount) {
+                document.getElementById('updateDiscountID').value = discountID;
+                document.getElementById('updateDiscountCode').value = discountCode;
+                document.getElementById('updateVoucherCount').value = voucherCount;
+                document.getElementById('updateDiscountPercentage').value = discountPercentage;
+                document.getElementById('updateminimumAmount').value = minimumAmount;
+                document.getElementById('updatemaximumAmount').value = maximumAmount;
+            }
+        </script>
     </body>
 </html>

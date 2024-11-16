@@ -68,9 +68,9 @@ public class HomeServlet extends HttpServlet {
                 avgRating = totalRating / productCount;
             }
             if(avgRating >= 0){
-                if(shopdtolist.size() < 6){
+                if(shopdtolist.size() < 4){
                     shopdtolist.add(new ShopDTO(s.getShopID(),s.getName(),s.getDescription(),s.getStatus(), 
-                        s.getShopImage(), s.getAddress(), s.getTimeOpen(), s.getTimeClose(), avgRating));
+                        s.getShopImage(), s.getAddress(), s.getTimeOpen(), s.getTimeClose(), (int)avgRating));
                 }
             }
         }

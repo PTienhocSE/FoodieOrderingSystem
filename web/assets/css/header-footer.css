@@ -48,13 +48,13 @@ div#navbarNavAltMarkup {
 }
 a.navbar-brand {
   font-weight: 700;
-  font-size: 40px;
+  font-size: 40px !important;
   margin-left: 50px;
-  color: #5eae53;
+  color: #5eae53  !important;
 }
 
 a.nav-link {
-  margin: 0px 18px;
+  margin: 0px 18px ;
   color: #5eae53;
 }
 .navbar__item {

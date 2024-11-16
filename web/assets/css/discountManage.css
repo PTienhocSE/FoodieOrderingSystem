@@ -11,7 +11,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     display: block;
     max-width: 1200px;
     margin: 40px auto;
-    min-height: 52vh;
+    min-height: 80vh;
+}
+
+button.btn.btn-success {
+    text-decoration: none;
+    color: #5eae53;
+    padding: 7px 12px;
+    border: 1px solid #5eae53;
+    margin: 0px 10px;
+    border-radius: 17px;
+    background-color: white;
 }
 
 button.btn.btn-primary {
@@ -66,3 +76,4 @@ button.btn.btn-success.btn-sm {
     border-radius: 17px;
     background-color: #5eae53;
 }
+

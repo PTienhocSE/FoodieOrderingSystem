@@ -93,6 +93,24 @@ public class DiscountManagementServlet extends HttpServlet {
         }
     }
 
+    private boolean validateSystemDiscountCode(List<CartItemDTO> cart, double totalOrderAmount, Discount discount) throws Exception {
+        Double minimumAmount = discount.getMinimumAmount();
+        Double maximumAmount = discount.getMaximumAmount();
+
+        // Kiểm tra giá trị tối thiểu của đơn hàng
+        if (totalOrderAmount < minimumAmount) {
+            throw new Exception("The discount code requires a minimum order amount of " + minimumAmount + ".");
+        }
+
+        // Kiểm tra các sản phẩm trong giỏ hàng (áp dụng cho toàn hệ thống, không cần kiểm tra shop)
+        double discountAmount = totalOrderAmount * (discount.getDiscountPercentage() / 100);
+        if (discountAmount > maximumAmount) {
+            discountAmount = maximumAmount;
+        }
+
+        return true;
+    }
+
     protected void applyDiscount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         AccountDAO accountDAO = new AccountDAO();
@@ -106,81 +124,95 @@ public class DiscountManagementServlet extends HttpServlet {
         String deliveryOption = request.getParameter("shipping_method");
         String timePickup = request.getParameter("pickup_time");
 
-        Account account = accountDAO.getUserById(userID);
-        Double discountPercentage = discountDAO.getDiscountPercentageByDiscountCode(discountCode);
-
-        if (discountPercentage == null) {
-            request.setAttribute("errorMessage", "The discount code is invalid or has expired.");
-            forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption);
-            return;
-        }
-
-        int discountOwnerUserID = discountDAO.getUserIdByDiscountCode(discountCode);
-        int discountShopID = accountDAO.getShopIDByUserID(discountOwnerUserID);
-
-        Discount discount = discountDAO.getAllDiscountsByShopID(discountShopID)
-                .stream()
-                .filter(d -> d.getDiscountCODE().equals(discountCode))
-                .findFirst()
-                .orElse(null);
-
-        if (discount == null) {
-            request.setAttribute("errorMessage", "The discount code is not applicable.");
-            forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption);
-            return;
-        }
-
-        Double minimumAmount = discount.getMinimumAmount();
-        Double maximumAmount = discount.getMaximumAmount();
-
         List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
         double totalOrderAmount = 0.0;
 
         for (CartItemDTO item : cart) {
-            int productShopID = item.getProduct().getShopId();
-
-            if (discountShopID != 0 && productShopID != discountShopID) {
-                request.setAttribute("errorMessage", "The discount code is only applicable to products from the same shop.");
-                forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption);
-                return;
-            }
-
             totalOrderAmount += item.getProduct().getPrice() * item.getQuantity();
         }
 
-        if (totalOrderAmount < minimumAmount) {
-            request.setAttribute("errorMessage", "The discount code requires a minimum order amount of " + minimumAmount + ".");
-            forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption);
-            return;
+        try {
+            Double discountPercentage = discountDAO.getDiscountPercentageByDiscountCode(discountCode);
+
+            if (discountPercentage == null) {
+                throw new Exception("The discount code is invalid or has expired.");
+            }
+
+            int discountOwnerUserID = discountDAO.getUserIdByDiscountCode(discountCode);
+            int discountShopID = accountDAO.getShopIDByUserID(discountOwnerUserID);
+
+            Discount discount = discountDAO.getAllDiscountsByShopID(discountShopID)
+                    .stream()
+                    .filter(d -> d.getDiscountCODE().equals(discountCode))
+                    .findFirst()
+                    .orElse(null);
+
+            if (discount == null) {
+                throw new Exception("The discount code is not applicable.");
+            }
+
+            double discountAmount = 0.0;
+            double finalAmount = totalOrderAmount;
+
+            if (discountShopID == 0) {
+                if (validateSystemDiscountCode(cart, totalOrderAmount, discount)) {
+                    discountAmount = totalOrderAmount * (discountPercentage / 100);
+                    if (discountAmount > discount.getMaximumAmount()) {
+                        discountAmount = discount.getMaximumAmount();
+                    }
+                    finalAmount -= discountAmount;
+                }
+            } else {
+                for (CartItemDTO item : cart) {
+                    int productShopID = item.getProduct().getShopId();
+                    if (productShopID != discountShopID) {
+                        throw new Exception("The discount code is only applicable to products from the same shop.");
+                    }
+                }
+
+                if (totalOrderAmount < discount.getMinimumAmount()) {
+                    throw new Exception("The discount code requires a minimum order amount of " + discount.getMinimumAmount() + ".");
+                }
+
+                discountAmount = totalOrderAmount * (discountPercentage / 100);
+                if (discountAmount > discount.getMaximumAmount()) {
+                    discountAmount = discount.getMaximumAmount();
+                }
+                finalAmount -= discountAmount;
+            }
+
+            if (finalAmount < 0) {
+                finalAmount = 0.0;
+            }
+            
+            int discountID = discount.getDiscountID();
+            int newTotalUse = discount.getTotalUse() + 1;
+            discountDAO.updateTotalUse(discountID, newTotalUse);
+            forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption, discountCode, finalAmount, discountAmount, totalOrderAmount);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", e.getMessage());
+            forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption, discountCode, totalOrderAmount, 0.0, totalOrderAmount);
         }
-
-        double discountAmount = totalOrderAmount * (discountPercentage / 100);
-
-        if (discountAmount > maximumAmount) {
-            discountAmount = maximumAmount;
-        }
-
-        double finalAmount = totalOrderAmount - discountAmount;
-
-        session.setAttribute("payment_method", paymentMethod);
-        session.setAttribute("deliveryOption", deliveryOption);
-        request.setAttribute("phone", phone);
-        request.setAttribute("address", address);
-        session.setAttribute("finalAmount", finalAmount);
-        session.setAttribute("discountAmount", discountAmount);
-        session.setAttribute("originalAmount", totalOrderAmount);
-        session.setAttribute("discountCode", discountCode);
-
-        request.getRequestDispatcher("WEB-INF/view/checkout.jsp").forward(request, response);
     }
 
-    private void forwardToCheckout(HttpServletRequest request, HttpServletResponse response, String address, String phone, String timePickup, String payment_method, String deliveryOption) throws ServletException, IOException {
+    private void forwardToCheckout(HttpServletRequest request, HttpServletResponse response, String address, String phone,
+            String timePickup, String paymentMethod, String deliveryOption, String discountCode,
+            double finalAmount, double discountAmount, double totalOrderAmount)
+            throws ServletException, IOException {
         request.setAttribute("address", address);
         request.setAttribute("phone", phone);
+
         HttpSession session = request.getSession();
         session.setAttribute("timePickup", timePickup);
-        session.setAttribute("payment_method", payment_method);
+        session.setAttribute("payment_method", paymentMethod);
         session.setAttribute("deliveryOption", deliveryOption);
+        session.setAttribute("discountCode", discountCode);
+
+        session.setAttribute("originalAmount", totalOrderAmount);
+
+        session.setAttribute("discountAmount", discountAmount);
+        session.setAttribute("finalAmount", finalAmount);
+
         request.getRequestDispatcher("WEB-INF/view/checkout.jsp").forward(request, response);
     }
 
@@ -246,23 +278,9 @@ public class DiscountManagementServlet extends HttpServlet {
 
     protected void unlockDiscount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, Exception {
-        int discountID = Integer.parseInt(request.getParameter("discountID"));
         DiscountDAO discountDAO = new DiscountDAO();
-
-        try {
-            discountDAO.unlockDiscount(discountID);
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Error unlocking discount: " + e.getMessage());
-            request.getRequestDispatcher("WEB-INF/view/errorPage.jsp").forward(request, response);
-            return;
-        }
-
+        int discountID = Integer.parseInt(request.getParameter("discountID"));
+        discountDAO.unlockDiscount(discountID);
         response.sendRedirect("discountManage");
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
     }
 }

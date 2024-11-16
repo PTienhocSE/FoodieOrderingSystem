@@ -55,6 +55,11 @@
                         <i class="ti-timer"></i> Discount
                     </a>
                 </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/OrderingSystem/moneyrequest">
+                        <i class="ti-timer"></i> Money Request
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -62,28 +67,28 @@
         <div class="main-content">
             <ul class="nav nav-tabs mt-4" id="refundTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="new-order-tab" data-bs-toggle="tab" href="#new-order" role="tab" aria-controls="new-order" aria-selected="true">New Orders<b style="color:#F6B76C; margin-left: 8px"> (${pendingList.size()})</b></a>
+                    <a class="nav-link active" id="new-order-tab" data-bs-toggle="tab" href="#new-order" role="tab" aria-controls="new-order" aria-selected="true">New Orders<b style="color:#F6B76C; margin-left: 8px"> (${totalPendingOrders})</b></a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="preparing-tab" data-bs-toggle="tab" href="#preparing" role="tab" aria-controls="preparing" aria-selected="false">Preparing<b style="color:#F6B76C; margin-left: 8px"> (${prepareList.size()})</b></a>
+                    <a class="nav-link" id="preparing-tab" data-bs-toggle="tab" href="#preparing" role="tab" aria-controls="preparing" aria-selected="false">Preparing<b style="color:#F6B76C; margin-left: 8px"> (${totalPreparingOrders})</b></a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="ready-tab" data-bs-toggle="tab" href="#ready" role="tab" aria-controls="ready" aria-selected="false">Ready For Delivery<b style="color:#F6B76C; margin-left: 8px"> (${readyList.size()})</b></a>
+                    <a class="nav-link" id="ready-tab" data-bs-toggle="tab" href="#ready" role="tab" aria-controls="ready" aria-selected="false">Ready For Delivery<b style="color:#F6B76C; margin-left: 8px"> (${totalReadyOrders})</b></a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="in-transit-tab" data-bs-toggle="tab" href="#in-transit" role="tab" aria-controls="in-transit" aria-selected="false">In Transit<b style="color:#F6B76C; margin-left: 8px"> (${shippingList.size()})</b></a>
+                    <a class="nav-link" id="in-transit-tab" data-bs-toggle="tab" href="#in-transit" role="tab" aria-controls="in-transit" aria-selected="false">In Transit<b style="color:#F6B76C; margin-left: 8px"> (${totalShippingOrders})</b></a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">Completed<b style="color:#F6B76C; margin-left: 8px"> (${completeList.size()})</b></a>
+                    <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">Completed<b style="color:#F6B76C; margin-left: 8px"> (${totalCompletedOrders})</b></a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="cancelled-tab" data-bs-toggle="tab" href="#cancelled" role="tab" aria-controls="cancelled" aria-selected="false">Cancelled<b style="color:#F6B76C; margin-left: 8px">(${cancelList.size()})</b></a>
+                    <a class="nav-link" id="cancelled-tab" data-bs-toggle="tab" href="#cancelled" role="tab" aria-controls="cancelled" aria-selected="false">Cancelled<b style="color:#F6B76C; margin-left: 8px">(${totalCancelledOrders})</b></a>
                 </li>
             </ul>
             <div style="min-height: 80vh" class="tab-content" id="ordersTabsContent">
                 <!-- New Orders Section -->
                 <div class="mt-4 tab-pane fade show active" id="new-order" role="tabpanel" aria-labelledby="new-order-tab">
-                    <h5>New Orders (${pendingList.size()})</h5>
+                    <h5>New Orders (${totalPendingOrders})</h5>
                     <c:forEach var="order" items="${pendingList}">
                         <div class="card p-3 mb-3">
                             <a href = "./order-detail?orderId=${order.getOrderId()}">
@@ -108,12 +113,17 @@
                             </a>
                         </div>
                     </c:forEach>
+                    <div class="pagination">
+                        <c:forEach var="i" begin="1" end="${(totalPendingOrders / pageSize) + (totalPendingOrders % pageSize > 0 ? 1 : 0)}">
+                            <a href="order-manage?page=${i}&size=${pageSize}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                        </c:forEach>
+                    </div>
                 </div>
                 <!-- Preparing Section -->
 
                 <!-- Preparing Section -->
                 <div class="mt-4  tab-pane fade " id="preparing" role="tabpanel" aria-labelledby="preparing-tab">
-                    <h5>Preparing (${prepareList.size()})</h5>
+                    <h5>Preparing (${totalPreparingOrders})</h5>
                     <c:forEach var="order" items="${prepareList}">
                         <div class="card p-3 mb-3">
                             <a href = "./order-detail?orderId=${order.getOrderId()}">
@@ -139,10 +149,15 @@
                             </a>
                         </div>
                     </c:forEach>
+                    <div class="pagination">
+                        <c:forEach var="i" begin="1" end="${(totalPreparingOrders / pageSize) + (totalPreparingOrders % pageSize > 0 ? 1 : 0)}">
+                            <a href="order-manage?page=${i}&size=${pageSize}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                        </c:forEach>
+                    </div>
                 </div>
                 <!-- Ready for Delivery Section -->
                 <div class="mt-4  tab-pane fade " id="ready" role="tabpanel" aria-labelledby="ready-tab">
-                    <h5>Ready For Delivery(${readyList.size()})</h5>
+                    <h5>Ready For Delivery(${totalReadyOrders})</h5>
                     <c:forEach var="order" items="${readyList}">
                         <div class="card p-3 mb-3">
                             <a href = "./order-detail?orderId=${order.getOrderId()}">
@@ -168,10 +183,15 @@
                             </a>
                         </div>
                     </c:forEach>
+                    <div class="pagination">
+                        <c:forEach var="i" begin="1" end="${(totalReadyOrders / pageSize) + (totalReadyOrders % pageSize > 0 ? 1 : 0)}">
+                            <a href="order-manage?page=${i}&size=${pageSize}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                        </c:forEach>
+                    </div>
                 </div>
 
                 <div class="mt-4  tab-pane fade " id="in-transit" role="tabpanel" aria-labelledby="in-transit-tab">
-                    <h5>In Transit(${shippingList.size()})</h5>
+                    <h5>In Transit(${totalShippingOrders})</h5>
                     <c:forEach var="order" items="${shippingList}">
                         <div class="card p-3 mb-3">
                             <a href = "./order-detail?orderId=${order.getOrderId()}">
@@ -197,11 +217,16 @@
                             </a>
                         </div>
                     </c:forEach>
+                    <div class="pagination">
+                        <c:forEach var="i" begin="1" end="${(totalShippingOrders / pageSize) + (totalShippingOrders % pageSize > 0 ? 1 : 0)}">
+                            <a href="order-manage?page=${i}&size=${pageSize}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                        </c:forEach>
+                    </div>
                 </div>
 
 
                 <div class="mt-4  tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
-                    <h5>Completed(${completeList.size()})</h5>
+                    <h5>Completed(${totalCompletedOrders})</h5>
                     <c:forEach var="order" items="${completeList}">
                         <div class="card p-3 mb-3">
                             <a href = "./order-detail?orderId=${order.getOrderId()}">
@@ -217,10 +242,15 @@
                             </a>
                         </div>
                     </c:forEach>
+                    <div class="pagination">
+                        <c:forEach var="i" begin="1" end="${(totalCompletedOrders / pageSize) + (totalCompletedOrders % pageSize > 0 ? 1 : 0)}">
+                            <a href="order-manage?page=${i}&size=${pageSize}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                        </c:forEach>
+                    </div>
                 </div>
 
                 <div class="mt-4  tab-pane fade" id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
-                    <h5>Cancelled(${cancelList.size()})</h5>
+                    <h5>Cancelled(${totalCancelledOrders})</h5>
                     <c:forEach var="order" items="${cancelList}">
                         <div class="card p-3 mb-3">
                             <a href = "./order-detail?orderId=${order.getOrderId()}">
@@ -236,6 +266,11 @@
                             </a>
                         </div>
                     </c:forEach>
+                    <div class="pagination">
+                        <c:forEach var="i" begin="1" end="${(totalCancelledOrders / pageSize) + (totalCancelledOrders % pageSize > 0 ? 1 : 0)}">
+                            <a href="order-manage?page=${i}&size=${pageSize}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                        </c:forEach>
+                    </div>
                 </div>
             </div>
 
@@ -244,80 +279,7 @@
             <script src="js/bootstrap.min.js"></script>
         </div>
 
-        <!-- Ready for Delivery Section -->
-        <div class="mt-4  tab-pane fade " id="ready" role="tabpanel" aria-labelledby="ready-tab">
-            <h5>Ready For Delivery(${readyList.size()})</h5>
-            <c:forEach var="order" items="${readyList}">
-                <div class="card p-3 mb-3">
-                    <a href = "./order-detail?orderId=${order.getOrderId()}">
-                        <div class="row">
-                            <div class="col-sm-2">No: ${order.getOrderId()}</div>
-                            <div class="col-sm-2"><b>${FormatString.formatCurrency(order.getTotalAmount())}</b></div>
-                            <div class="col-sm-2"><b>${order.getDeliveryOption()}</b></div>
-                            <div class="col-sm-3">${order.getAddress()}</div>
-                            <div class="col-sm-3">Time Pickup: <b><fmt:formatDate value="${order.getTimePickup()}" pattern="HH:mm:ss" /></b></div>
-                        </div>
-                    </a>
-                </div>
-            </c:forEach>
-        </div>
-
-        <div class="mt-4  tab-pane fade " id="in-transit" role="tabpanel" aria-labelledby="in-transit-tab">
-            <h5>In Transit(${shippingList.size()})</h5>
-            <c:forEach var="order" items="${shippingList}">
-                <div class="card p-3 mb-3">
-                    <a href = "./order-detail?orderId=${order.getOrderId()}">
-                        <div class="row">
-                            <div class="col-sm-2">No: ${order.getOrderId()}</div>
-                            <div class="col-sm-2"><b>${FormatString.formatCurrency(order.getTotalAmount())}</b></div>
-                            <div class="col-sm-2"><b>${order.getDeliveryOption()}</b></div>
-                            <div class="col-sm-3">${order.getAddress()}</div>
-                            <div class="col-sm-3">Time Pickup: <b><fmt:formatDate value="${order.getTimePickup()}" pattern="HH:mm:ss" /></b></div>
-                        </div>
-                    </a>
-                </div>
-            </c:forEach>
-        </div>
-
-
-        <div class="mt-4  tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
-            <h5>Completed(${completeList.size()})</h5>
-            <c:forEach var="order" items="${completeList}">
-                <div class="card p-3 mb-3">
-                    <a href = "./order-detail?orderId=${order.getOrderId()}">
-                        <div class="row">
-                            <div class="col-sm-2">No: ${order.getOrderId()}</div>
-                            <div class="col-sm-2"><b>${FormatString.formatCurrency(order.getTotalAmount())}</b></div>
-                            <div class="col-sm-2"><b>${order.getDeliveryOption()}</b></div>
-                            <div class="col-sm-3">${order.getAddress()}</div>
-                            <div class="col-sm-3">Time Pickup: <b><fmt:formatDate value="${order.getTimePickup()}" pattern="HH:mm:ss" /></b></div>
-                        </div>
-                    </a>
-                </div>
-            </c:forEach>
-        </div>
-
-        <div class="mt-4  tab-pane fade" id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
-            <h5>Cancelled(${cancelList.size()})</h5>
-            <c:forEach var="order" items="${cancelList}">
-                <div class="card p-3 mb-3">
-                    <a href = "./order-detail?orderId=${order.getOrderId()}">
-                        <div class="row">
-                            <div class="col-sm-2">No: ${order.getOrderId()}</div>
-                            <div class="col-sm-2"><b>${FormatString.formatCurrency(order.getTotalAmount())}</b></div>
-                            <div class="col-sm-2"><b>${order.getDeliveryOption()}</b></div>
-                            <div class="col-sm-3">${order.getAddress()}</div>
-                            <div class="col-sm-3">Time Pickup: <b><fmt:formatDate value="${order.getTimePickup()}" pattern="HH:mm:ss" /></b></div>
-                        </div>
-                    </a>
-                </div>
-            </c:forEach>
-        </div>
-    </div>
-</div>
-
-<script src="js/Jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
+    
 </body>
 
 </html>

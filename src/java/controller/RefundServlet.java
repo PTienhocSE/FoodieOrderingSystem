@@ -9,6 +9,7 @@ import context.AccountDAO;
 import context.OrderDAO;
 import context.RefundDAO;
 import context.RewardRedemptionDAO;
+import context.ShopDAO;
 import context.VNPayBillDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -258,6 +259,17 @@ public class RefundServlet extends HttpServlet {
             String content = "Refund submitted successfully. Please allow 1-2 business days for the funds to be returned to your payment account.";
             Email.sendEmailNotifying(email, content);
 
+            int shopID = orderDAO.getShopIDByPaymentID(paymentID);
+            ShopDAO shopDAO = new ShopDAO();
+
+            boolean success = shopDAO.updateShopWallet(shopID, (-Float.parseFloat(vnp_Amount)) / 100);
+
+            if (success) {
+                System.out.println("Shop wallet updated successfully for shopId: " + shopID);
+            } else {
+                System.out.println("Failed to update shop wallet for shopId: " + shopID);
+            }
+
             response.sendRedirect("/OrderingSystem/order-history");
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid order ID format");
@@ -361,6 +373,16 @@ public class RefundServlet extends HttpServlet {
                 String content = "We have reviewed your refund request, and we are pleased to inform you that it has been approved. Please allow 1-2 business days for the funds to be returned to your payment account.\nRefund Amount: " + vnp_Amount;
                 Email.sendEmailNotifying(email, content);
 
+                int shopID = orderDAO.getShopIDByPaymentID(paymentID);
+                ShopDAO shopDAO = new ShopDAO();
+
+                boolean success = shopDAO.updateShopWallet(shopID, (-Float.parseFloat(vnp_Amount)) / 100);
+                
+                if (success) {
+                    System.out.println("Shop wallet updated successfully for shopId: " + shopID);
+                } else {
+                    System.out.println("Failed to update shop wallet for shopId: " + shopID);
+                }
                 response.sendRedirect("/OrderingSystem/refundManage");
             }
 

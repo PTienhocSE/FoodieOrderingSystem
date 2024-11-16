@@ -115,6 +115,60 @@ public class DiscountDAO {
         return discounts;
     }
 
+    public Double getMinimumAmountByDiscountCode(String discountCode) {
+        String sql = "SELECT MinimumAmount FROM Discount WHERE DiscountCODE = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Double minimumAmount = null;
+
+        try {
+            conn = dbContext.getConnection(); 
+            ps = conn.prepareStatement(sql);  
+            ps.setString(1, discountCode);   
+
+            rs = ps.executeQuery();          
+
+            if (rs.next()) {
+                minimumAmount = rs.getDouble("MinimumAmount");  
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            dbContext.closeConnection(conn); 
+        }
+        return minimumAmount;  
+    }
+
+    public Double getMaximumDiscountByDiscountCode(String discountCode) {
+        String sql = "SELECT MaximumAmount FROM Discount WHERE DiscountCODE = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Double maximumAmount = null;
+
+        try {
+            conn = dbContext.getConnection(); 
+            ps = conn.prepareStatement(sql);  
+            ps.setString(1, discountCode);   
+
+            rs = ps.executeQuery();          
+
+            if (rs.next()) {
+                maximumAmount = rs.getDouble("MaximumAmount");  
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            dbContext.closeConnection(conn);  
+        }
+        return maximumAmount;  
+    }
+
     public Double getDiscountPercentageByDiscountCode(String discountCode) {
         Double discountPercentage = null;
         String sql = "SELECT DiscountPercentage FROM Discount WHERE DiscountCODE = ? AND Status = 1";
@@ -139,6 +193,44 @@ public class DiscountDAO {
             dbContext.closeConnection(conn);
         }
         return discountPercentage;
+    }
+
+    public Discount getDiscountDetailsByDiscountCode(String discountCode) {
+        Discount discount = null;
+        String sql = "SELECT DiscountID, UserID, DiscountCODE, NumberOfDiscount, TotalUse, DiscountPercentage, ShopID, Status, MinimumAmount, MaximumAmount "
+                + "FROM Discount WHERE DiscountCODE = ? AND Status = 1";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dbContext.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, discountCode);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                discount = new Discount();
+                discount.setDiscountID(rs.getInt("DiscountID"));
+                discount.setUserID(rs.getInt("UserID"));
+                discount.setDiscountCODE(rs.getString("DiscountCODE"));
+                discount.setNumberOfDiscount(rs.getInt("NumberOfDiscount"));
+                discount.setTotalUse(rs.getInt("TotalUse"));
+                discount.setDiscountPercentage(rs.getDouble("DiscountPercentage"));
+                discount.setShopID(rs.getInt("ShopID"));
+                discount.setStatus(rs.getInt("Status"));
+                discount.setMinimumAmount(rs.getDouble("MinimumAmount"));
+                discount.setMaximumAmount(rs.getDouble("MaximumAmount"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            dbContext.closeConnection(conn);
+        }
+
+        return discount;
     }
 
     public int getUserIdByDiscountCode(String DiscountCODE) {
