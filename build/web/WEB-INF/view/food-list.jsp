@@ -49,12 +49,12 @@
         <!-- PAGE INFO -->
         <div id="page-info">
             <div class="page-title">Food/Drink</div>
-<!--            <div class="page-info-more">
-                <a href="/OrderingSystem/">Home</a>
-                <a style="border-left: 1px solid #e8e8ea" href="#"
-                   >Food/Drink Management</a
-                >
-            </div>-->
+            <!--            <div class="page-info-more">
+                            <a href="/OrderingSystem/">Home</a>
+                            <a style="border-left: 1px solid #e8e8ea" href="#"
+                               >Food/Drink Management</a
+                            >
+                        </div>-->
         </div>
 
         <!-- FOOD CONTENT -->
@@ -66,45 +66,45 @@
                         <c:if test="${not empty categoryList}">
                             <c:forEach var="category" items="${categoryList}">
                                 <li>
-                                    <input type="checkbox" name="categoryIds" value="${category.categoryID}" /> ${category.getType()}
-                                </li>
+                                    <input type="checkbox" name="categoryIds" value="${category.categoryID}" <c:if test="${categoryIds.contains(category.categoryID)}">checked</c:if>/> ${category.getType()}
+                                    </li>
                             </c:forEach>
                         </c:if>
                     </ul>
 
                     <h3>Rating</h3>
                     <select name="rating">
-                        <option value="None">None</option>
-                        <option value="4.5">4.5+</option>
-                        <option value="4.0">4.0+</option>
-                        <option value="3.5">3.5+</option>
-                    </select>
+                        <option value="None" <c:if test="${minRating == 0.0}">selected</c:if>>None</option>
+                        <option value="4.5" <c:if test="${minRating == 4.5}">selected</c:if>>4.5+</option>
+                        <option value="4.0" <c:if test="${minRating == 4.0}">selected</c:if>>4.0+</option>
+                        <option value="3.5" <c:if test="${minRating == 3.5}">selected</c:if>>3.5+</option>
+                        </select>
 
-                    <h3>Sort by</h3>
-                    <select name="sortBy">
-                        <option value="none">None</option>
-                        <option value="popularity">Sort by Popularity</option>
-                        <option value="rating">Sort by Rating</option>
-                        <option value="price">Sort by Price</option>
-                    </select>
-                    <div class="filter-button">
-                        <button class="filter-btn" type="submit">Filter</button>
-                        <a href="/OrderingSystem/food" class="unfilter-btn" >Delete Filter</a>
+                        <h3>Sort by</h3>
+                        <select name="sortBy">
+                            <option value="none">None</option>
+                            <option value="popularity" <c:if test="${sortBy == 'popularity'}">selected</c:if>>Sort by Popularity</option>
+                            <option value="rating" <c:if test="${sortBy == 'rating'}">selected</c:if>>Sort by Rating</option>
+                            <option value="price" <c:if test="${sortBy == 'price'}">selected</c:if>>Sort by Price</option>
+                        </select>
+                        <div class="filter-button">
+                            <button class="filter-btn" type="submit">Filter</button>
+                            <a href="/OrderingSystem/food" class="unfilter-btn" >Delete Filter</a>
+                        </div>
+                    </form>
+                </aside>
+
+                <main class="restaurant-section">
+                    <div class="header">
+                        <div class="restaurant-search">
+                            <form class="food-search-form" action="food" method="post">
+                                <input type="text" name="keyword" placeholder="Enter product name..." required>
+                                <button style="width: 30%" type="submit">Search</button>
+                            </form>
+                        </div>
                     </div>
-                </form>
-            </aside>
 
-            <main class="restaurant-section">
-                <div class="header">
-                    <div class="restaurant-search">
-                        <form class="food-search-form" action="food" method="post">
-                            <input type="text" name="keyword" placeholder="Enter product name..." required>
-                            <button style="width: 30%" type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="restaurant-list">
+                    <div class="restaurant-list">
                     <c:if test="${not empty productList}">
                         <c:forEach var="product" items="${productList}">
                             <div class="restaurant-card">
@@ -113,11 +113,11 @@
 
                                 </div>
 
-                                    <a style="text-decoration: none" href ="./food-detail?productId=${product.getProduct().getProductId()}">
+                                <a style="text-decoration: none" href ="./food-detail?productId=${product.getProduct().getProductId()}">
                                     <div class="restaurant-info">
                                         <span class="rating">${product.getProduct().getRating()}</span>
                                         <h4>${product.getProduct().getName()}</h4>
-                                        <p>${product.getProduct().getPrice()} $</p>
+                                        <p>${product.getProduct().getPrice()} VND</p>
                                         <div class="restaurant-more-info">
                                             <p>${product.getProduct().getDescription()}</p>
                                         </div>

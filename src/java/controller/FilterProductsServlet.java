@@ -87,6 +87,10 @@ public class FilterProductsServlet extends HttpServlet {
         
         request.setAttribute("productList", productList);
         request.setAttribute("categoryList", categoryList);
+        request.setAttribute("categoryIds", categoryIds);
+        request.setAttribute("minRating", minRating);
+        request.setAttribute("sortBy", sortBy);
+    
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/view/food-list.jsp");
         dispatcher.forward(request, response);
     }

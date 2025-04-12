@@ -189,7 +189,7 @@
                             <div class = "quantity-label">Quantity</div>
                             <div class="number-input">
                                 <button type="button"  onclick="decrement(this)">-</button>
-                                <input type="number" id ="${p.getProductId()}" name ="quantity" class ="quantity" value="1" min="1" max="10"onchange="updateAmount(this)">
+                                <input readonly type="number" id ="${p.getProductId()}" name ="quantity" class ="quantity" value="1" min="1" max="10"onchange="updateAmount(this)">
                                 <button  type="button" onclick="increment(this)">+</button>
                                 <input type = "hidden" id="action" name ="isAdd" value = "true">
                                 <input type = "hidden" name ="productID" value = "${p.getProductId()}">

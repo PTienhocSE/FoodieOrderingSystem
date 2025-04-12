@@ -67,7 +67,7 @@
                                         <div class="col-2">
                                             <div class="number-input">
                                                 <button type="button" onclick="decrement(this)">-</button>
-                                                <input type="number" id="${item.product.productId}" name="quantity_${item.product.productId}" class="quantity" value="${item.quantity}" min="1" max="10" onchange="updateAmount(this)">
+                                                <input readonly="" type="number" id="${item.product.productId}" name="quantity_${item.product.productId}" class="quantity" value="${item.quantity}" min="1" max="10" onchange="updateAmount(this)">
                                                 <button type="button" onclick="increment(this)">+</button>
                                             </div>
                                         </div>

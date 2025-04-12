@@ -99,7 +99,7 @@
                     </div>
                     <div class="form-group">
                         <label for="userName">Username</label>
-                        <input type="text" id="username" name="username" value="${user.getUserName()}">
+                        <input readonly type="text" id="username" name="username" value="${user.getUserName()}">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
