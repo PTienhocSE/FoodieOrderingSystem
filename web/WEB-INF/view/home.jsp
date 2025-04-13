@@ -229,12 +229,10 @@
                     you with just a few clicks!
                 </div>
                 <div class="map-search">
-                    <input
-                        class="map-input default-input"
-                        type="text"
-                        value="Find Restaurant..."
-                        />
-                    <button class="map-btnsearch default-btnsearch">Search</button>
+                    <form style="display: flex" action="restaurant" method="post">
+                        <input class="map-input default-input" type="text" name="keyword" placeholder="Search for a restaurant..." required />
+                        <button class="map-btnsearch default-btnsearch" type="submit">Search</button>
+                    </form>
                 </div>
             </div>
         </div>
