@@ -112,6 +112,7 @@ public class RestaurantServlet extends HttpServlet {
 
         // Thiết lập thuộc tính để chuyển đến trang JSP
         request.setAttribute("restaurantList", foundShops);
+        request.setAttribute("keyword", keyword);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/view/restaurant-list.jsp");
         dispatcher.forward(request, response);

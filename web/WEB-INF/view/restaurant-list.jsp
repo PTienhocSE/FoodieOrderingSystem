@@ -61,7 +61,7 @@
                 <div class="header res-header">
                     <div class="restaurant-search">
                         <form style="display: flex" action="restaurant" method="post">
-                            <input  type="text" name="keyword" placeholder="Search for a restaurant..." required />
+                            <input <c:if test="${not empty keyword}">value=${keyword}</c:if> type="text" name="keyword" placeholder="Search for a restaurant..." required />
                             <button type="submit">Search</button>
                         </form>
                     </div>

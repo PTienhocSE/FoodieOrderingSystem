@@ -245,12 +245,11 @@ public double getShopWallet(int shopId) {
 
     public List<Shop> searchShop(String keyword) {
         List<Shop> shops = new ArrayList<>();
-        String query = "SELECT * FROM Shop WHERE Name LIKE ? OR Description LIKE ?";
+        String query = "SELECT * FROM Shop WHERE Name LIKE ?";
 
         try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             String searchValue = "%" + keyword + "%";
             ps.setString(1, searchValue);
-            ps.setString(2, searchValue);
 
             ResultSet rs = ps.executeQuery();
 
