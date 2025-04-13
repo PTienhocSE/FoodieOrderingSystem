@@ -253,17 +253,19 @@
                 <div class="restaurant-list">
                     <!-- Restaurant Card 1 -->
                     <c:forEach var="s" items="${shopdtolist}">
-                        <div class="card card-restaurant" style="width: 18rem">
-                            <div class="rating-box">${s.rating}</div>
-                            <img class="card-img-top" src="${s.shopImage}" style="width: 100%; height: 200px; object-fit: cover;" alt="Card image cap"/>
-                            <div class="card-body">
-                                <h5 class="card-title card-title-res">${s.name}</h5>
-                                <div class="restaurant-info">
-                                    <p class="res-time">${s.timeOpen} - ${s.timeClose}</p>
-                                    <div class="res-category">${s.description}</div>
+                        <a href="/OrderingSystem/restaurant-detail?shopId=${s.shopID}">
+                            <div class="card card-restaurant" style="width: 18rem">
+                                <div class="rating-box">${s.rating}</div>
+                                <img class="card-img-top" src="${s.shopImage}" style="width: 100%; height: 200px; object-fit: cover;" alt="Card image cap"/>
+                                <div class="card-body">
+                                    <h5 class="card-title card-title-res">${s.name}</h5>
+                                    <div class="restaurant-info">
+                                        <p class="res-time">${s.timeOpen} - ${s.timeClose}</p>
+                                        <div class="res-category">${s.description}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </c:forEach>
                 </div>
             </div>
