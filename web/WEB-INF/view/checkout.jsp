@@ -123,7 +123,7 @@
 
                                     <div class="col-lg-12 mb-20" id="pickup_time_field" style="display:none;">
                                         <label>Time pick up<span>*</span></label>
-                                        <input name="pickup_time" type="datetime-local" value="${pickup_time}" id="pickup_time">
+                                        <input name="pickup_time" type="datetime-local" id="pickup_time" value="${pickup_time}">   
                                 </div>
                                 <input type="hidden" name="userID" value="${user.userID}">
 
@@ -222,6 +222,21 @@
                 homeDeliveryRadio.addEventListener('change', function () {
                     pickupTimeField.style.display = 'none';
                 });
+            });
+            window.addEventListener('DOMContentLoaded', () => {
+                const input = document.getElementById('pickup_time');
+                const now = new Date();
+                now.setSeconds(0, 0);
+
+                const offset = now.getTimezoneOffset();
+                const localDate = new Date(now.getTime() - offset * 60000);
+                const localISOTime = localDate.toISOString().slice(0, 16);
+
+                input.min = localISOTime;
+
+                if (!input.value || input.value < localISOTime) {
+                    input.value = localISOTime;
+                }
             });
         </script>
     </body>
