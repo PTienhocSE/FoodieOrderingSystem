@@ -204,7 +204,7 @@
                                     <h5 class="card-title">${p.name}</h5>
                                     <p class="card-text">${p.shopName}</p>
                                     <div class="card-info">
-                                        <p class="time">${p.purchaseCount}</p>
+                                        <!--<p class="time">${p.purchaseCount}</p>-->
                                         <p class="price">From $${p.price}</p>
                                     </div>
                                 </div>

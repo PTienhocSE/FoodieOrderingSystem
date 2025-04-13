@@ -81,7 +81,7 @@ public class HomeServlet extends HttpServlet {
             ProductImage pimg = iDAO.getAvatarProductImageByID(p.getProductId());
             Shop shop = shopdao.getRestaurantByID(p.getShopId());
             String cate = cateDAO.getCategoryNameByID(p.getCategoryId());
-            if(p.getRating() >= 0){
+            if(p.getRating() >= 4.5){
                 if(pdtolist.size() < 6){
                 pdtolist.add(new ProductDTO(pimg.getImgURL(),p.getProductId(),p.getName(),p.getDescription(),
                 p.getPrice(),p.isStatus(),shop.getName(),cate,p.getPurchaseCount(),p.getRating()));
