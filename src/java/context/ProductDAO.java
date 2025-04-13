@@ -129,13 +129,12 @@ public class ProductDAO {
 
     public List<Product> searchProducts(String keyword) {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM Product WHERE (Name LIKE ? OR Description LIKE ?) AND status LIKE '1'";
+        String query = "SELECT * FROM Product WHERE Name LIKE ? AND status LIKE '1'";
 
         try (Connection conn = dbContext.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
 
             String searchValue = "%" + keyword + "%";
             ps.setString(1, searchValue);
-            ps.setString(2, searchValue);
 
             ResultSet rs = ps.executeQuery();
 

@@ -158,10 +158,10 @@
 
             <main class="restaurant-section">
                 <div class="head">
-                    <div class="restaurant-search">
-                        <input type="text" placeholder="Search for a food..." />
-                        <button>Search</button>
-                    </div>
+                    <form class="restaurant-search" action="food" method="post">
+                        <input type="text" name="keyword" placeholder="Search for a food..." required>
+                        <button type="submit">Search</button>
+                    </form>
                     <c:if test="${sessionScope.user != null && sessionScope.user.shopID == shop.shopID}">
                         <button class ="sticky-button" 
                                 data-shopId="${user.getShopID()}"
@@ -207,7 +207,7 @@
                                     <div class="restaurant-info">
                                         <span class="rating">${product.getProduct().getRating()}</span>
                                         <h4>${product.getProduct().getName()}</h4>
-                                        <p>${product.getProduct().getPrice()} $</p>
+                                        <p>${product.getProduct().getPrice()} VND</p>
                                         <div class="restaurant-more-info">
                                             <p>${product.getProduct().getDescription()}</p>
                                         </div>
