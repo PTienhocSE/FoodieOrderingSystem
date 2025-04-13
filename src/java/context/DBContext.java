@@ -12,8 +12,6 @@ import java.sql.Connection;
  * @author LENOVO
  */
 public class DBContext {
-
-
     private String server = "localhost";
     private String user = "sa";
 

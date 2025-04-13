@@ -115,6 +115,9 @@ public class FavouriteServlet extends HttpServlet {
     private void addWishlist(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("role") == null) {
+            response.sendRedirect("login");
+        } else {
         int productID = Integer.parseInt(request.getParameter("productID"));
         int userID = Integer.parseInt(request.getParameter("userID"));
 
@@ -130,6 +133,7 @@ public class FavouriteServlet extends HttpServlet {
             response.sendRedirect("favourite");
         } else {
             response.sendRedirect("food-detail?productId=" + productID);
+        }
         }
     }
 

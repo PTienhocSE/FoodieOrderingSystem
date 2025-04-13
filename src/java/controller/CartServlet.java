@@ -40,18 +40,17 @@ public class CartServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession(false);
-        
+
         if (session == null || session.getAttribute("role") == null) {
             response.sendRedirect("login");
         } else {
             CartDAO cartDAO = new CartDAO();
             Account user = (Account) session.getAttribute("user");
 
-            
             // Group cart items by shop
             Map<Integer, List<CartItemDTO>> groupedCartItems = cartDAO.groupCartItemsByShop(user.getUserID());
             session.setAttribute("cart", groupedCartItems);
-            
+
             // Create a map to hold shop names
             ShopDAO shopDAO = new ShopDAO();
             Map<Integer, String> shopNames = new HashMap<>();
@@ -75,7 +74,7 @@ public class CartServlet extends HttpServlet {
             addProduct(request, response);
 
         } else if (request.getParameter("isUpdate") != null) {
-            
+
             updateCartQuantity(request, response);
         } else {
             deleteProduct(request, response);
@@ -95,43 +94,44 @@ public class CartServlet extends HttpServlet {
         cd.updateCartItemQuantity(user.getUserID(), productId, quantity);
 
         Map<Integer, List<CartItemDTO>> groupedCartItems = cd.groupCartItemsByShop(user.getUserID());
-        session.setAttribute("cart", groupedCartItems); 
+        session.setAttribute("cart", groupedCartItems);
     }
 
     private void addProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        int productID = Integer.parseInt(request.getParameter("productID"));
-        int shopID = Integer.parseInt(request.getParameter("shopID"));
-        int userID = Integer.parseInt(request.getParameter("userID"));
+        if (session == null || session.getAttribute("role") == null) {
+            response.sendRedirect("login");
+        } else {
+            int productID = Integer.parseInt(request.getParameter("productID"));
+            int shopID = Integer.parseInt(request.getParameter("shopID"));
+            int userID = Integer.parseInt(request.getParameter("userID"));
         int quantity;
         if (request.getParameter("quantity") == null) {
-            quantity = 1;
-        } else {
-            quantity = Integer.parseInt(request.getParameter("quantity"));
+                quantity = 1;
+            } else {
+                quantity = Integer.parseInt(request.getParameter("quantity"));
+            }
+            CartItem c = new CartItem(userID, productID, quantity, shopID);
+
+            CartDAO cartDAO = new CartDAO();
+            if (cartDAO.addToCart(c)) {
+                session.setAttribute("alert", "Added to cart successfully!");
+            } else {
+                session.setAttribute("alert", "Failed to add product!");
+            }
+
+            if (request.getParameter("fromWL") != null) {
+                session.removeAttribute("alert");
+                response.sendRedirect("favourite");
+            } else {
+
+                Map<Integer, List<CartItemDTO>> groupedCartItems = cartDAO.groupCartItemsByShop(userID);
+                session.setAttribute("cart", groupedCartItems);
+
+                response.sendRedirect("food-detail?productId=" + productID);
+            }
         }
-        CartItem c = new CartItem(userID, productID, quantity, shopID);
-
-        CartDAO cartDAO = new CartDAO();
-        if (cartDAO.addToCart(c)) {
-            session.setAttribute("alert", "Added to cart successfully!");
-        } else {
-            session.setAttribute("alert", "Failed to add product!");
-        }
-
-        if (request.getParameter("fromWL") != null) {
-            session.removeAttribute("alert");
-            response.sendRedirect("favourite");
-        } else {
-            
-        Map<Integer, List<CartItemDTO>> groupedCartItems = cartDAO.groupCartItemsByShop(userID);
-        session.setAttribute("cart", groupedCartItems); 
-        
-        response.sendRedirect("food-detail?productId=" + productID);
-        }
-
-
-
     }
 
     private void deleteProduct(HttpServletRequest request, HttpServletResponse response)
@@ -157,8 +157,8 @@ public class CartServlet extends HttpServlet {
                 }
             }
             Map<Integer, List<CartItemDTO>> groupedCartItems = cartDAO.groupCartItemsByShop(userID);
-            session.setAttribute("cart", groupedCartItems); 
-            
+            session.setAttribute("cart", groupedCartItems);
+
             session.setAttribute("cartStatus", "Delete products successfully!");
             response.sendRedirect("cart");
         }
