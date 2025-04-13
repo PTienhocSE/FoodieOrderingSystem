@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [ordering_system]    Script Date: 4/12/2025 9:32:10 AM ******/
+/****** Object:  Database [ordering_system]    Script Date: 4/13/2025 10:22:11 AM ******/
 CREATE DATABASE [ordering_system]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -82,7 +82,7 @@ ALTER DATABASE [ordering_system] SET QUERY_STORE = OFF
 GO
 USE [ordering_system]
 GO
-/****** Object:  Table [dbo].[CartItem]    Script Date: 4/12/2025 9:32:10 AM ******/
+/****** Object:  Table [dbo].[CartItem]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -99,7 +99,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Categories]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Categories]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -114,7 +114,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Comment]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Comment]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -131,7 +131,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Discount]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Discount]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -153,7 +153,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Favourite]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Favourite]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -168,7 +168,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Feedback]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Feedback]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -186,7 +186,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Order]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Order]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -212,7 +212,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[OrderItem]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[OrderItem]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -229,7 +229,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[password_reset_tokens]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[password_reset_tokens]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -245,7 +245,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Post]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Post]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -264,7 +264,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Product]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Product]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -286,7 +286,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProductImage]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[ProductImage]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -302,7 +302,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Refund]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Refund]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -322,7 +322,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RewardRedemption]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[RewardRedemption]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -337,7 +337,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Shop]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Shop]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -358,7 +358,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Users]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[Users]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -382,7 +382,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[VNPay_Bill]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[VNPay_Bill]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -399,7 +399,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[withdrawal_requests]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Table [dbo].[withdrawal_requests]    Script Date: 4/13/2025 10:22:11 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -421,8 +421,7 @@ GO
 SET IDENTITY_INSERT [dbo].[CartItem] ON 
 
 INSERT [dbo].[CartItem] ([CartItemID], [UserID], [ProductID], [Quantity], [ShopID]) VALUES (1, 6511874, 10, 3, 1)
-INSERT [dbo].[CartItem] ([CartItemID], [UserID], [ProductID], [Quantity], [ShopID]) VALUES (30, 46325799, 11, 1, 2)
-INSERT [dbo].[CartItem] ([CartItemID], [UserID], [ProductID], [Quantity], [ShopID]) VALUES (31, 46325799, 10, 2, 1)
+INSERT [dbo].[CartItem] ([CartItemID], [UserID], [ProductID], [Quantity], [ShopID]) VALUES (1033, 46325799, 10, 1, 1)
 SET IDENTITY_INSERT [dbo].[CartItem] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Categories] ON 
@@ -478,6 +477,7 @@ INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedD
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (15163698, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-11-14T19:35:30.010' AS DateTime), N'home_delivery', NULL, CAST(249500.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'PENDING', 0, N'73541521', N'0386188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (15578739, 46325799, N'PENDING', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-11-14T19:10:14.970' AS DateTime), N'home_delivery', NULL, CAST(249500.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'PENDING', 0, N'37870492', N'0386188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (16319741, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-10-26T16:22:19.723' AS DateTime), N'home_delivery', NULL, CAST(499000.00 AS Decimal(18, 2)), NULL, N'COD', N'CANCELLED', 0, N'37413164', N'0386188917')
+INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (16445154, 46325799, N'PAID', N'Thừa Thiên Huế', CAST(N'2025-04-12T10:47:25.733' AS DateTime), N'home_delivery', NULL, CAST(499000.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'PENDING', 0, N'26494400', N'3886188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (19652830, 46325799, N'PENDING', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-11-14T18:25:38.067' AS DateTime), N'home_delivery', NULL, CAST(448500.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'PENDING', 0, N'15016032', N'0386188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (20599323, 46325799, N'PENDING', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-11-03T23:48:48.033' AS DateTime), N'home_delivery', NULL, CAST(330000.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'PENDING', 0, N'32470351', N'0386188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (21555074, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-10-25T16:21:16.210' AS DateTime), N'home_delivery', NULL, CAST(439120.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'CANCELLED', 1, N'54034632', N'0386188917')
@@ -559,8 +559,8 @@ INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedD
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (93419154, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-10-22T17:27:02.060' AS DateTime), N'home_delivery', NULL, CAST(337500.00 AS Decimal(18, 2)), NULL, N'COD', N'COMPLETED', 0, N'43419932', N'0386188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (93505225, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-11-15T02:41:42.687' AS DateTime), N'home_delivery', NULL, CAST(219560.00 AS Decimal(18, 2)), NULL, N'COD', N'PENDING', 0, N'14923182', N'0386188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (93762180, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-11-15T03:39:07.040' AS DateTime), N'home_delivery', NULL, CAST(549000.00 AS Decimal(18, 2)), NULL, N'COD', N'PENDING', 0, N'06785441', N'0386188917')
-INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (93786688, 46325799, N'PENDING', N'Hue', CAST(N'2024-10-22T22:24:21.870' AS DateTime), N'home_delivery', NULL, CAST(499000.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'CANCELLED', 0, N'76980756', N'3886188917')
 GO
+INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (93786688, 46325799, N'PENDING', N'Hue', CAST(N'2024-10-22T22:24:21.870' AS DateTime), N'home_delivery', NULL, CAST(499000.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'CANCELLED', 0, N'76980756', N'3886188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (93834453, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-11-14T18:56:44.040' AS DateTime), N'home_delivery', NULL, CAST(249500.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'PENDING', 0, N'24697176', N'0386188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (94354567, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-11-13T16:57:34.887' AS DateTime), N'home_delivery', NULL, CAST(352000.00 AS Decimal(18, 2)), NULL, N'COD', N'PENDING', 0, N'24625131', N'0386188917')
 INSERT [dbo].[Order] ([OrderID], [UserID], [PaymentStatus], [Address], [CreatedDate], [DeliveryOption], [TimePickup], [TotalAmount], [DiscountID], [PaymentOption], [DeliveryStatus], [isRefund], [PaymentID], [Phone]) VALUES (98982191, 46325799, N'PAID', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', CAST(N'2024-10-25T15:45:01.947' AS DateTime), N'home_delivery', NULL, CAST(439120.00 AS Decimal(18, 2)), NULL, N'VNPAY', N'CANCEL', 1, N'29347954', N'0386188917')
@@ -690,6 +690,7 @@ INSERT [dbo].[OrderItem] ([OrderItemID], [OrderID], [ProductID], [Quantity], [To
 INSERT [dbo].[OrderItem] ([OrderItemID], [OrderID], [ProductID], [Quantity], [TotalPrice]) VALUES (3276, 52697157, 17, 3, CAST(375000.00 AS Decimal(18, 2)))
 INSERT [dbo].[OrderItem] ([OrderItemID], [OrderID], [ProductID], [Quantity], [TotalPrice]) VALUES (3277, 92723503, 11, 2, CAST(550000.00 AS Decimal(18, 2)))
 INSERT [dbo].[OrderItem] ([OrderItemID], [OrderID], [ProductID], [Quantity], [TotalPrice]) VALUES (3278, 92723503, 17, 3, CAST(375000.00 AS Decimal(18, 2)))
+INSERT [dbo].[OrderItem] ([OrderItemID], [OrderID], [ProductID], [Quantity], [TotalPrice]) VALUES (4273, 16445154, 10, 2, CAST(499000.00 AS Decimal(18, 2)))
 SET IDENTITY_INSERT [dbo].[OrderItem] OFF
 GO
 SET IDENTITY_INSERT [dbo].[password_reset_tokens] ON 
@@ -892,7 +893,7 @@ SET IDENTITY_INSERT [dbo].[Refund] OFF
 GO
 SET IDENTITY_INSERT [dbo].[RewardRedemption] ON 
 
-INSERT [dbo].[RewardRedemption] ([RedemptionID], [UserID], [NumberOfPoint]) VALUES (4, 46325799, 82171)
+INSERT [dbo].[RewardRedemption] ([RedemptionID], [UserID], [NumberOfPoint]) VALUES (4, 46325799, 82670)
 INSERT [dbo].[RewardRedemption] ([RedemptionID], [UserID], [NumberOfPoint]) VALUES (5, 98292168, 1850)
 INSERT [dbo].[RewardRedemption] ([RedemptionID], [UserID], [NumberOfPoint]) VALUES (6, 98292168, -998140)
 INSERT [dbo].[RewardRedemption] ([RedemptionID], [UserID], [NumberOfPoint]) VALUES (7, 98292168, -998140)
@@ -900,7 +901,7 @@ SET IDENTITY_INSERT [dbo].[RewardRedemption] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Shop] ON 
 
-INSERT [dbo].[Shop] ([ShopID], [Name], [Description], [Status], [ShopImage], [Address], [TimeOpen], [TimeClose], [ShopWallet]) VALUES (1, N'Hana Chicken', N'Fried chicken restaurants.', 1, N'https://i.pinimg.com/564x/f8/a7/01/f8a70144eb881afe78df0164e657e966.jpg', N'321 ABC, Da Nang, VietNam', CAST(N'09:00:00' AS Time), CAST(N'21:00:00' AS Time), CAST(3033424.00 AS Decimal(10, 2)))
+INSERT [dbo].[Shop] ([ShopID], [Name], [Description], [Status], [ShopImage], [Address], [TimeOpen], [TimeClose], [ShopWallet]) VALUES (1, N'Hana Chicken', N'Fried chicken restaurants.', 1, N'https://i.pinimg.com/564x/f8/a7/01/f8a70144eb881afe78df0164e657e966.jpg', N'321 ABC, Da Nang, VietNam', CAST(N'09:00:00' AS Time), CAST(N'21:00:00' AS Time), CAST(3532424.00 AS Decimal(10, 2)))
 INSERT [dbo].[Shop] ([ShopID], [Name], [Description], [Status], [ShopImage], [Address], [TimeOpen], [TimeClose], [ShopWallet]) VALUES (2, N'Viet Restaurants', N'Hemispheres Steak & Seafood Grill', 1, N'https://i.pinimg.com/564x/a9/14/a1/a914a1fd5994a1997154155256d751cc.jpg', N'321 ABC, Ha Noi, VietNam', CAST(N'10:00:00' AS Time), CAST(N'22:00:00' AS Time), CAST(1.00 AS Decimal(10, 2)))
 INSERT [dbo].[Shop] ([ShopID], [Name], [Description], [Status], [ShopImage], [Address], [TimeOpen], [TimeClose], [ShopWallet]) VALUES (3, N'Starbucks', N'Famous for coffee and beverages.', 1, N'https://assets.architecturaldigest.in/photos/63ff4262a3b6ca40fb5805c3/master/w_1600%2Cc_limit/Starbucks%2520Cali%2520Colombia%25201.jpg', N'123 Main St, Ho Chi Minh City, Vietnam', CAST(N'07:00:00' AS Time), CAST(N'23:00:00' AS Time), CAST(1.00 AS Decimal(10, 2)))
 INSERT [dbo].[Shop] ([ShopID], [Name], [Description], [Status], [ShopImage], [Address], [TimeOpen], [TimeClose], [ShopWallet]) VALUES (4, N'Highlands Coffee', N'Vietnamese-style coffee shop.', 1, N'https://thicongnhahang.vn/storage/app/media/uploaded-files/thiet-ke-quan-highlands-coffee-1.jpg', N'456 Le Duan, Da Nang, Vietnam', CAST(N'08:00:00' AS Time), CAST(N'22:00:00' AS Time), CAST(1.00 AS Decimal(10, 2)))
@@ -916,9 +917,10 @@ INSERT [dbo].[Shop] ([ShopID], [Name], [Description], [Status], [ShopImage], [Ad
 INSERT [dbo].[Shop] ([ShopID], [Name], [Description], [Status], [ShopImage], [Address], [TimeOpen], [TimeClose], [ShopWallet]) VALUES (14, N'Coffe House', N'ad', 1, N'./restaurantImages/_.......... .......... .......... (1).png', N'Đà Nẵng', CAST(N'22:34:00' AS Time), CAST(N'08:36:00' AS Time), CAST(1.00 AS Decimal(10, 2)))
 SET IDENTITY_INSERT [dbo].[Shop] OFF
 GO
-INSERT [dbo].[Users] ([UserID], [UserName], [Pass], [FullName], [PhoneNumber], [Email], [Address], [AvtImg], [ShopID], [Role], [code], [Status]) VALUES (6511874, N'admin', N'$2a$10$VGhcMOYkGA/Sy/KRmlMZ0.B9q8mnHAFCrs797XETYPLkFn66UDlLq', N'Tran Duc Nam', N'0386188917', N'phuctienrt@gmail.com', N'Hue', N'avatarImages\1728993914698_4806755-middle.png', NULL, 2, NULL, 0)
+INSERT [dbo].[Users] ([UserID], [UserName], [Pass], [FullName], [PhoneNumber], [Email], [Address], [AvtImg], [ShopID], [Role], [code], [Status]) VALUES (6511874, N'admin', N'$2a$10$VGhcMOYkGA/Sy/KRmlMZ0.B9q8mnHAFCrs797XETYPLkFn66UDlLq', N'Tran Duc Nam', N'0386188917', N'phuctienrt@gmail.com', N'Hue', N'avatarImages\1728993914698_4806755-middle.png', NULL, 2, NULL, 1)
 INSERT [dbo].[Users] ([UserID], [UserName], [Pass], [FullName], [PhoneNumber], [Email], [Address], [AvtImg], [ShopID], [Role], [code], [Status]) VALUES (17610341, N'shop13', N'$2a$10$h5hODdVlj7UBiJ1rmWT5Qur5dLjtO32KzN0BFuBFj3T7sRbBh81pS', N'Hana Chicken', N'0386188917', N'phuctienrt@gmail.com', N'Ngu Hanh Son - Da Nang', N'avatarImages\1729607905051_4806755-middle.png', 1, 2, NULL, 1)
-INSERT [dbo].[Users] ([UserID], [UserName], [Pass], [FullName], [PhoneNumber], [Email], [Address], [AvtImg], [ShopID], [Role], [code], [Status]) VALUES (46325799, N'trtiezph1', N'$2a$10$xmuKlZb.Si5tjO.HeWuocupRRLLEeIo1emS8V5VTiaUpwsZAYWOhu', N'Tran Phuc Tien', N'0386188917', N'tientpde180866@fpt.edu.vn', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', N'http://res.cloudinary.com/dvyu4f7lq/image/upload/v1731562091/acfk8qco3b3uq3zayu52.jpg', NULL, 1, NULL, 1)
+INSERT [dbo].[Users] ([UserID], [UserName], [Pass], [FullName], [PhoneNumber], [Email], [Address], [AvtImg], [ShopID], [Role], [code], [Status]) VALUES (19037638, N'hieu12345', N'$2a$10$uV7.JjblJkIn.KMIpmPWzebwIv/KQEeCh7S7r38qc8QQX5AvhGBlO', N'Tran Duc Hieu', N'0386188918', N'hieutrumgsg@gmail.com', NULL, NULL, NULL, 1, NULL, 1)
+INSERT [dbo].[Users] ([UserID], [UserName], [Pass], [FullName], [PhoneNumber], [Email], [Address], [AvtImg], [ShopID], [Role], [code], [Status]) VALUES (46325799, N'trtiezph', N'$2a$10$xmuKlZb.Si5tjO.HeWuocupRRLLEeIo1emS8V5VTiaUpwsZAYWOhu', N'Tran Phuc Tien', N'0386188917', N'tientpde180866@fpt.edu.vn', N'26 Le Trung Dinh, Hoa Hai, Ngu Hanh Son', N'http://res.cloudinary.com/dvyu4f7lq/image/upload/v1731562091/acfk8qco3b3uq3zayu52.jpg', NULL, 1, NULL, 1)
 INSERT [dbo].[Users] ([UserID], [UserName], [Pass], [FullName], [PhoneNumber], [Email], [Address], [AvtImg], [ShopID], [Role], [code], [Status]) VALUES (83530592, N'coffee', N'$2a$10$OljMfDUMj3Admyepkd5/heBI2wUibBNMK10ddcXqiozmLkc.vROX.', N'coffee', N'0795993433', N'nhs211306@gmail.com', N'Đà Nẵng', NULL, 14, 2, NULL, 1)
 INSERT [dbo].[Users] ([UserID], [UserName], [Pass], [FullName], [PhoneNumber], [Email], [Address], [AvtImg], [ShopID], [Role], [code], [Status]) VALUES (98292168, N'hamy123', N'$2a$10$6HXXEcccgHZky7q871W7luu1JOwsvtWnxBtrTp29HFBOaq7hXgbGW', N'Tran Thi Ha My', N'0774540933', N'foodiesystem2004@gmail.com', NULL, NULL, NULL, 1, NULL, 1)
 GO
@@ -935,6 +937,7 @@ INSERT [dbo].[VNPay_Bill] ([vnpTxnRef], [vnpAmount], [vnpPayDate], [vnpTransacti
 INSERT [dbo].[VNPay_Bill] ([vnpTxnRef], [vnpAmount], [vnpPayDate], [vnpTransactionStatus], [OrderId]) VALUES (N'21733543', CAST(439120.00 AS Decimal(10, 2)), N'20241025152919', N'00', 85890295)
 INSERT [dbo].[VNPay_Bill] ([vnpTxnRef], [vnpAmount], [vnpPayDate], [vnpTransactionStatus], [OrderId]) VALUES (N'23448003', CAST(337500.00 AS Decimal(10, 2)), N'20241022195447', N'00', 5733596)
 INSERT [dbo].[VNPay_Bill] ([vnpTxnRef], [vnpAmount], [vnpPayDate], [vnpTransactionStatus], [OrderId]) VALUES (N'24697176', CAST(249500.00 AS Decimal(10, 2)), N'20241114185655', N'00', 93834453)
+INSERT [dbo].[VNPay_Bill] ([vnpTxnRef], [vnpAmount], [vnpPayDate], [vnpTransactionStatus], [OrderId]) VALUES (N'26494400', CAST(499000.00 AS Decimal(10, 2)), N'20250412104817', N'00', 16445154)
 INSERT [dbo].[VNPay_Bill] ([vnpTxnRef], [vnpAmount], [vnpPayDate], [vnpTransactionStatus], [OrderId]) VALUES (N'29347954', CAST(439120.00 AS Decimal(10, 2)), N'20241025154527', N'00', 98982191)
 INSERT [dbo].[VNPay_Bill] ([vnpTxnRef], [vnpAmount], [vnpPayDate], [vnpTransactionStatus], [OrderId]) VALUES (N'36497972', CAST(219560.00 AS Decimal(10, 2)), N'20241115034629', N'00', 35858643)
 INSERT [dbo].[VNPay_Bill] ([vnpTxnRef], [vnpAmount], [vnpPayDate], [vnpTransactionStatus], [OrderId]) VALUES (N'37870492', CAST(249500.00 AS Decimal(10, 2)), N'20241114190657', N'00', 79452270)
@@ -971,7 +974,7 @@ SET IDENTITY_INSERT [dbo].[withdrawal_requests] OFF
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [idx_order_paymentid]    Script Date: 4/12/2025 9:32:11 AM ******/
+/****** Object:  Index [idx_order_paymentid]    Script Date: 4/13/2025 10:22:11 AM ******/
 CREATE NONCLUSTERED INDEX [idx_order_paymentid] ON [dbo].[Order]
 (
 	[PaymentID] ASC
@@ -1084,6 +1087,152 @@ GO
 ALTER TABLE [dbo].[Product]  WITH CHECK ADD CHECK  (([Rating]>=(0) AND [Rating]<=(5)))
 GO
 ALTER TABLE [dbo].[Users]  WITH CHECK ADD CHECK  (([PhoneNumber] like '0[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'))
+GO
+/****** Object:  Trigger [dbo].[UpdateCartItemQuantity]    Script Date: 4/13/2025 10:22:11 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [dbo].[UpdateCartItemQuantity]
+ON [dbo].[CartItem]
+INSTEAD OF INSERT
+AS
+BEGIN
+    DECLARE @ProductID INT;
+    DECLARE @Quantity INT;
+    DECLARE @UserID INT;
+    DECLARE @ShopID INT;
+
+    SELECT @ProductID = ProductID, @Quantity = Quantity, @UserID = UserID, @ShopID = ShopID FROM inserted;
+
+    IF EXISTS (SELECT 1 FROM CartItem WHERE ProductID = @ProductID AND UserID = @UserID AND ShopID = @ShopID)
+    BEGIN
+
+        UPDATE CartItem
+        SET Quantity = Quantity + @Quantity
+        WHERE ProductID = @ProductID AND UserID = @UserID AND ShopID = @ShopID;
+    END 
+    ELSE 
+    BEGIN
+
+        INSERT INTO CartItem (UserID, ProductID, Quantity, ShopID) 
+        VALUES (@UserID, @ProductID, @Quantity, @ShopID);
+    END
+END;
+GO
+ALTER TABLE [dbo].[CartItem] ENABLE TRIGGER [UpdateCartItemQuantity]
+GO
+/****** Object:  Trigger [dbo].[after_discount_use_update]    Script Date: 4/13/2025 10:22:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [dbo].[after_discount_use_update]
+ON [dbo].[Discount]
+AFTER UPDATE
+AS
+BEGIN
+    -- Check if the TotalUse has reached or exceeded the NumberOfDiscount
+    IF EXISTS (
+        SELECT 1
+        FROM inserted
+        WHERE inserted.TotalUse >= inserted.NumberOfDiscount
+    )
+    BEGIN
+        -- Lock the discount by setting the Status to 0
+        UPDATE Discount
+        SET Status = 0
+        WHERE DiscountID IN (SELECT DiscountID FROM inserted WHERE inserted.TotalUse >= inserted.NumberOfDiscount);
+    END
+END
+GO
+ALTER TABLE [dbo].[Discount] ENABLE TRIGGER [after_discount_use_update]
+GO
+/****** Object:  Trigger [dbo].[trg_UpdateProductRating]    Script Date: 4/13/2025 10:22:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TRIGGER [dbo].[trg_UpdateProductRating]
+ON [dbo].[Feedback]
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+
+    DECLARE @ProductID INT;
+
+
+    SELECT @ProductID = ProductID FROM inserted;
+
+
+    UPDATE Product
+    SET Rating = (
+        SELECT CAST(AVG(CAST(Rating AS FLOAT)) AS DECIMAL(3, 2))
+        FROM Feedback
+        WHERE ProductID = @ProductID
+    )
+    WHERE ProductID = @ProductID;
+END;
+GO
+ALTER TABLE [dbo].[Feedback] ENABLE TRIGGER [trg_UpdateProductRating]
+GO
+/****** Object:  Trigger [dbo].[trg_InsertUser]    Script Date: 4/13/2025 10:22:12 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE TRIGGER [dbo].[trg_InsertUser]
+ON [dbo].[Users]
+INSTEAD OF INSERT
+AS
+BEGIN
+    DECLARE @UserID INT;
+    DECLARE @UserName VARCHAR(100);
+    DECLARE @Pass VARCHAR(255);
+    DECLARE @FullName NVARCHAR(50);
+    DECLARE @PhoneNumber VARCHAR(10);
+    DECLARE @Email VARCHAR(50);
+    DECLARE @Address NVARCHAR(50);
+    DECLARE @AvtImg NVARCHAR(200);
+    DECLARE @ShopID INT;
+    DECLARE @Role INT;
+    DECLARE @Status BIT; -- Khai báo biến Status
+
+    DECLARE insert_cursor CURSOR FOR
+    SELECT UserName, Pass, FullName, PhoneNumber, Email, Address, AvtImg, ShopID, Role, Status
+    FROM inserted; -- Thêm Status vào phần SELECT
+
+    OPEN insert_cursor;
+
+    FETCH NEXT FROM insert_cursor INTO @UserName, @Pass, @FullName, @PhoneNumber, @Email, @Address, @AvtImg, @ShopID, @Role, @Status;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        WHILE 1=1
+        BEGIN
+            SET @UserID = ABS(CHECKSUM(NEWID()) % 100000000);
+
+            IF NOT EXISTS (SELECT 1 FROM Users WHERE UserID = @UserID)
+            BEGIN
+                INSERT INTO Users (UserID, UserName, Pass, FullName, PhoneNumber, Email, Address, AvtImg, ShopID, Role, Status)
+                VALUES (@UserID, @UserName, @Pass, @FullName, @PhoneNumber, @Email, @Address, @AvtImg, @ShopID, @Role, @Status); -- Thêm Status 
+                BREAK;
+            END
+        END
+
+        FETCH NEXT FROM insert_cursor INTO @UserName, @Pass, @FullName, @PhoneNumber, @Email, @Address, @AvtImg, @ShopID, @Role, @Status;
+    END
+
+    CLOSE insert_cursor;
+    DEALLOCATE insert_cursor;
+END;
+
+
+GO
+ALTER TABLE [dbo].[Users] ENABLE TRIGGER [trg_InsertUser]
 GO
 USE [master]
 GO
