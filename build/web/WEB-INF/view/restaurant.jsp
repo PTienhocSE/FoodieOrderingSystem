@@ -187,8 +187,8 @@
                                             <button type="button" class="btn-update"
                                                     data-shopId="3" 
                                                     data-productId="${product.getProduct().getProductId()}"
-                                                    data-name="${product.getProduct().getName()}"
-                                                    data-price="${product.getProduct().getPrice()}"
+                                                    data-name="${product.getProduct().getName()}"                                
+                                                    data-price="${FormatString.formatCurrency(product.getProduct().getPrice())}"
                                                     data-category="${product.getProduct().getCategoryId()}"
                                                     data-description="${product.getProduct().getDescription()}"
                                                     data-image="${product.getImgURL()}"
@@ -207,7 +207,7 @@
                                     <div class="restaurant-info">
                                         <span class="rating">${product.getProduct().getRating()}</span>
                                         <h4>${product.getProduct().getName()}</h4>
-                                        <p>${product.getProduct().getPrice()} VND</p>
+                                        <p>${FormatString.formatCurrency(product.getProduct().getPrice())}</p>              
                                         <div class="restaurant-more-info">
                                             <p>${product.getProduct().getDescription()}</p>
                                         </div>

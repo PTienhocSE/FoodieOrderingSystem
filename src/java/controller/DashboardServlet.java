@@ -78,17 +78,22 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("postCount", postCount);
         request.setAttribute("lockedPostCount", lockedPostCount);
 
-        double revenue = orderDao.getRevenue();
         String statistic = orderDao.getMonthlyRevenueChangePercentage();
         String[] parts = statistic.split(" ");
-        String changeType = parts[0]; // "Increased" hoặc "Decreased"
-        String percentage = parts[1]; // "37.64%"
-        String message = String.join(" ", parts[2], parts[3], parts[4]); // "than last month"
-     
-        request.setAttribute("revenue", revenue);
-        request.setAttribute("changeType", changeType);
-        request.setAttribute("percentage", percentage);
-        request.setAttribute("message", message);
+        String changeType = "";
+        String percentage = "";
+        String message = "";
+
+        if (parts.length >= 5) {
+            changeType = parts[0]; // "Increased" hoặc "Decreased"
+            percentage = parts[1]; // "37.64%"
+            message = String.join(" ", parts[2], parts[3], parts[4]); // "than last month"
+        } else {
+            // fallback nếu chuỗi trả về không đủ 5 phần
+            changeType = "Unknown";
+            percentage = "0%";
+            message = "compared to last month";
+        }
 
         // Chuyển đến dashboard.jsp
         request.getRequestDispatcher("WEB-INF/view/dashboard.jsp").forward(request, response);

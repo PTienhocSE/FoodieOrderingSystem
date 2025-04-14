@@ -1,4 +1,4 @@
-<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="model.*,java.util.*,util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
@@ -62,12 +62,12 @@
                                             </h2>
                                         </div>
                                         <div class="col-2">
-                                            <span class="price">${item.price} VND</span>
+                                            <span class="price">${FormatString.formatCurrency(item.price)}</span>
                                         </div>
                                         <div class="col-2">
                                             <div class="number-input">
                                                 <button type="button" onclick="decrement(this)">-</button>
-                                                <input readonly="" type="number" id="${item.product.productId}" name="quantity_${item.product.productId}" class="quantity" value="${item.quantity}" min="1" max="10" onchange="updateAmount(this)">
+                                                <input readonly="" type="number" id="${item.product.productId}" name="quantity_${item.product.productId}" class="quantity" value="${item.quantity}" min="1" max="100" onchange="updateAmount(this)">
                                                 <button type="button" onclick="increment(this)">+</button>
                                             </div>
                                         </div>
@@ -89,7 +89,10 @@
                         </td>
                     </tr>
                 </table>
-                <p style="text-align: center; color: red">${cartStatus}</p>
+                <c:if test="${not empty cartStatus}">
+                    <p style="text-align: center; color: red">${cartStatus}</p>
+                    <c:remove var="cartStatus" scope="session"/>
+                </c:if>
                 <div class="button-group mt-3">
                     <button id="delete-btn" type="submit" onclick="submitForm('method1')">Delete</button>
                     <button type="submit" onclick="submitForm('method2')">Order</button>
@@ -99,5 +102,77 @@
 
         <%@ include file="/include/footer.jsp" %>
         <script src="js/Jquery.js"></script>
+        <script>
+                        function parsePrice(text) {
+                            return parseFloat(text.replace(/[^\d]/g, '')) || 0;
+                        }
+
+                        function formatCurrency(value) {
+                            return new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: 'VND'
+                            }).format(value);
+                        }
+
+                        function updateAmount(input) {
+                            const cartItem = input.closest('.cart-item');
+                            if (!cartItem)
+                                return;
+
+                            const priceEl = cartItem.querySelector('.price');
+                            const amountEl = cartItem.querySelector('.amount');
+
+                            const price = parsePrice(priceEl.textContent);
+                            const quantity = parseInt(input.value);
+
+                            const amount = price * quantity;
+                            amountEl.textContent = formatCurrency(amount);
+                            updateTotalAmount();
+                        }
+
+                        function updateTotalAmount() {
+                            let total = 0;
+                            document.querySelectorAll('.cart-item').forEach(item => {
+                                const price = parsePrice(item.querySelector('.price').textContent);
+                                const quantity = parseInt(item.querySelector('.quantity').value);
+                                total += price * quantity;
+                            });
+
+                            const totalEl = document.querySelector('.totals_price');
+                            if (totalEl) {
+                                totalEl.textContent = formatCurrency(total);
+                            }
+                        }
+
+                        function increment(button) {
+                            const input = button.parentElement.querySelector('.quantity');
+                            let value = parseInt(input.value) || 1;
+                            if (value < 100) {
+                                value++;
+                                input.value = value;
+                                updateAmount(input);
+                            }
+                        }
+
+                        function decrement(button) {
+                            const input = button.parentElement.querySelector('.quantity');
+                            let value = parseInt(input.value) || 1;
+                            if (value > 1) {
+                                value--;
+                                input.value = value;
+                                updateAmount(input);
+                            }
+                        }
+
+                        document.addEventListener('DOMContentLoaded', function () {
+                            document.querySelectorAll('.quantity').forEach(input => {
+                                updateAmount(input);
+                                input.addEventListener('change', function () {
+                                    updateAmount(input);
+                                });
+                            });
+                        });
+        </script>
+
     </body>
 </html>

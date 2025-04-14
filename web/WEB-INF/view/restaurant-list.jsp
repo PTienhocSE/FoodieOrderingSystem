@@ -65,7 +65,7 @@
                             <button type="submit">Search</button>
                         </form>
                     </div>
-                    <form style="display: flex;
+<!--                    <form style="display: flex;
                           gap: 10px;" action="restaurant" method="GET" class="filter-form">
                         <select name="sortOption">
                             <option value="none">None</option>
@@ -73,7 +73,7 @@
                             <option value="timeClose">Sort by Time Close</option>
                         </select>
                         <button class="filter-search" type="submit">Filter</button>
-                    </form>
+                    </form>-->
                 </div>
                 <!--                <option>Sort by Rating</option>-->
                 <div class="restaurant-list">

@@ -68,7 +68,7 @@
                                             </h2>
                                         </div>
                                         <div id="col2" style="width: 21%;">
-                                            <span class="price">${item.getProduct().getPrice()}</span>
+                                            <span class="price">${FormatString.formatCurrency(item.getProduct().getPrice())}</span>
                                         </div>
                                         <div style="width: 16%">
                                             <div class="number-input">
@@ -205,6 +205,41 @@
                 document.getElementById("refundOrderForm_" + orderId).submit();
             }
         </script>
+        <script>
+            function updateAmount(input) {
+                var cartItem = input.closest('.cart-item');
+                if (!cartItem)
+                    return;
+
+                var priceText = cartItem.querySelector('.price').textContent.trim();
+                var price = parseFloat(priceText.replace(/[^\d]/g, ''));
+
+                var quantity = parseInt(input.value);
+
+                if (isNaN(price) || isNaN(quantity))
+                    return;
+
+                var total = price * quantity;
+
+                var formatted = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(total);
+
+                var amountEl = cartItem.querySelector('.amount');
+                if (amountEl) {
+                    amountEl.textContent = formatted;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var quantityInputs = document.querySelectorAll('.quantity');
+                quantityInputs.forEach(function (input) {
+                    updateAmount(input);
+                });
+            });
+        </script>
+
         <script src="js/Jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
     </body>

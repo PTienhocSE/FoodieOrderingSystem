@@ -4,7 +4,7 @@
     Author     : phuct
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8" import="model.*,java.util.*,util.*"%>
 <%@ page import="model.Account" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
@@ -147,7 +147,7 @@
                 </div>
             </nav>
 
-           <div class="container mt-5">
+            <div class="container mt-5">
                 <center> 
                     <h1 class="mb-5">Withdrawal Requests Management</h1>
 
@@ -178,7 +178,7 @@
                                     <tr>
                                         <td>${request.id}</td>
                                         <td>${request.shopId}</td>
-                                        <td>${request.requestedAmount} VND</td>
+                                        <td>${FormatString.formatCurrency(request.requestedAmount)}</td>
                                         <td>${request.requestDate}</td>
                                         <td>${request.status}</td>
                                         <td>${request.bankAccount}</td>
@@ -205,27 +205,27 @@
                 </center>
             </div>
 
-        <!-- =========== Scripts =========  -->
-        <script src="assets_01/js/main.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-        <script src="assets_01/js/chartsJS.js"></script>
-        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+            <!-- =========== Scripts =========  -->
+            <script src="assets_01/js/main.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+            <script src="assets_01/js/chartsJS.js"></script>
+            <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+            <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
-        <!-- JavaScript để xác nhận xóa và hiển thị thông báo -->
-        <script>
-                                                            function confirmDelete(postID) {
-                                                                var confirmAction = confirm("Are you sure you want to delete post #" + postID + "?");
-                                                                if (confirmAction) {
-                                                                    // Hiển thị khối thông báo nếu người dùng xác nhận
-                                                                    document.getElementById('msg-block').style.display = 'block';
-                                                                    return true;
-                                                                } else {
-                                                                    // Người dùng hủy, không hiển thị gì
-                                                                    return false;
+            <!-- JavaScript để xác nhận xóa và hiển thị thông báo -->
+            <script>
+                                                                function confirmDelete(postID) {
+                                                                    var confirmAction = confirm("Are you sure you want to delete post #" + postID + "?");
+                                                                    if (confirmAction) {
+                                                                        // Hiển thị khối thông báo nếu người dùng xác nhận
+                                                                        document.getElementById('msg-block').style.display = 'block';
+                                                                        return true;
+                                                                    } else {
+                                                                        // Người dùng hủy, không hiển thị gì
+                                                                        return false;
+                                                                    }
                                                                 }
-                                                            }
-        </script>
+            </script>
     </body>
 </html>

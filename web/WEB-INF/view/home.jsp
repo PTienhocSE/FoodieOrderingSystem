@@ -4,7 +4,7 @@
     Author     : phuct
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="model.*,java.util.*,util.*"%>
 <%@ page import="model.Account" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
@@ -205,7 +205,7 @@
                                     <p class="card-text">${p.shopName}</p>
                                     <div class="card-info">
                                         <!--<p class="time">${p.purchaseCount}</p>-->
-                                        <p class="price">From $${p.price}</p>
+                                        <p class="price">From ${FormatString.formatCurrency(p.price)}</p>
                                     </div>
                                 </div>
                             </div>

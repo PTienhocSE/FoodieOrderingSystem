@@ -113,20 +113,20 @@ public class OrderDetailServlet extends HttpServlet {
         Order order = orderDAO.getOrderByOrderID(orderId);
         String currentStatus = order.getDeliveryStatus();
         AccountDAO aDAO = new AccountDAO();
-        // Chuyển trạng thái hợp lệ
+
         switch (currentStatus) {
             case "PENDING":
                 if ("prepare".equals(action)) {
                     orderDAO.updateOrderStatus(orderId, "PREPARING");
                 }
                 break;
+
             case "PREPARING":
                 if ("ready".equals(action)) {
-
                     if ("pickup".equals(order.getDeliveryOption())) {
                         orderDAO.updateOrderStatus(orderId, "READY");
                         String email = aDAO.getUserById(order.getUserId()).getEmail();
-                        String content = "We are excited to inform you that your order  has been successfully prepared and is now ready for pickup. You can visit our store at your convenience to collect your order.\nStore Address: " + Utility.getShopAddressByOrderID(orderId);
+                        String content = "We are excited to inform you that your order has been successfully prepared and is now ready for pickup. You can visit our store at your convenience to collect your order.\nStore Address: " + Utility.getShopAddressByOrderID(orderId);
                         Email.sendEmailNotifying(email, content);
                     } else if ("home_delivery".equals(order.getDeliveryOption())) {
                         orderDAO.updateOrderStatus(orderId, "SHIPPING");
@@ -136,25 +136,27 @@ public class OrderDetailServlet extends HttpServlet {
                     }
                 }
                 break;
+
             case "READY":
             case "SHIPPING":
                 if ("complete".equals(action)) {
                     orderDAO.updateOrderStatus(orderId, "COMPLETED");
+
+                    response.sendRedirect("order-manage");
+                    return; 
                 }
                 break;
             default:
-
                 break;
         }
+
         if ("cancel".equals(action)) {
             orderDAO.updateOrderStatus(orderId, "CANCELLED");
             String email = aDAO.getUserById(order.getUserId()).getEmail();
             String content = "We regret to inform you that your order has been cancelled. If you have any questions or need further assistance, please feel free to reach out to our support team. We apologize for any inconvenience caused and appreciate your understanding.";
             Email.sendEmailNotifying(email, content);
-            
         }
 
-        // Điều hướng lại trang chi tiết đơn hàng
         response.sendRedirect("order-detail?orderId=" + orderId);
     }
 

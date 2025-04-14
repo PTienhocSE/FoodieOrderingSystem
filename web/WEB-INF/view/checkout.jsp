@@ -89,11 +89,15 @@
                                     </div>
                                     <div class="col-lg-12 mb-20">
                                         <label>Address<span>*</span></label>
-                                        <input required name="address" value="${address}" type="text">
+                                        <c:if test="${not empty user}">
+                                            <input value="${user.getAddress()}" type="text">
+                                        </c:if>
                                     </div>
                                     <div class="col-lg-12 mb-20">
                                         <label>Phone number<span>*</span></label>
-                                        <input required name="phone" type="tel" value="${phone}" pattern="[0-9]{10}" title="Enter phone number 10 digit" maxlength="10">
+                                        <c:if test="${not empty user}">
+                                            <input required name="phone" type="tel" value="${user.getPhoneNumber()}" pattern="[0-9]{10}" title="Enter phone number 10 digit" maxlength="10">
+                                        </c:if>
                                     </div>
                                 </div>
                                 <h4>Payment type</h4>

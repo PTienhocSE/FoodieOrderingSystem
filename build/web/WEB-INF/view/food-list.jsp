@@ -4,9 +4,7 @@
     Author     : phuct
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="model.Account" %>
-<%@ page import="model.Product" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="model.*,java.util.*,util.*"%>
 <%@ page import="context.ProductDAO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -84,8 +82,8 @@
                         <select name="sortBy">
                             <option value="none">None</option>
                             <option value="popularity" <c:if test="${sortBy == 'popularity'}">selected</c:if>>Sort by Popularity</option>
-                            <option value="rating" <c:if test="${sortBy == 'rating'}">selected</c:if>>Sort by Rating</option>
-                            <option value="price" <c:if test="${sortBy == 'price'}">selected</c:if>>Sort by Price</option>
+                        <option value="rating" <c:if test="${sortBy == 'rating'}">selected</c:if>>Sort by Rating</option>
+                        <option value="price" <c:if test="${sortBy == 'price'}">selected</c:if>>Sort by Price</option>
                         </select>
                         <div class="filter-button">
                             <button class="filter-btn" type="submit">Filter</button>
@@ -117,7 +115,8 @@
                                     <div class="restaurant-info">
                                         <span class="rating">${product.getProduct().getRating()}</span>
                                         <h4>${product.getProduct().getName()}</h4>
-                                        <p>${product.getProduct().getPrice()} VND</p>
+                                        <p>${FormatString.formatCurrency(product.getProduct().getPrice())}</p>
+
                                         <div class="restaurant-more-info">
                                             <p>${product.getProduct().getDescription()}</p>
                                         </div>

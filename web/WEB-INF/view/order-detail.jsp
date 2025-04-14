@@ -4,7 +4,7 @@
     Author     : LENOVO
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="model.*,java.util.*,util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
@@ -73,7 +73,7 @@
                                     </h2>
                                 </div>
                                 <div id="col2" style="width: 21%;">
-                                    <span class="price">${item.getProduct().getPrice()}</span>
+                                    <span class="price">${FormatString.formatCurrency(item.getProduct().getPrice())}</span>
                                 </div>
                                 <div style="width: 16%">
                                     <div class="number-input">
@@ -145,6 +145,70 @@
             </div>
         </div>
         <%@ include file="/include/footer.jsp" %>
+        <script>
+            function updateAmount(input) {
+                var cartItem = input.closest('.order-item');
+                if (!cartItem)
+                    return;
+
+                var priceText = cartItem.querySelector('.price').textContent.trim();
+                var price = parseFloat(priceText.replace(/[^\d]/g, ''));
+
+                var quantity = parseInt(input.value);
+                if (isNaN(price) || isNaN(quantity))
+                    return;
+
+                var total = price * quantity;
+
+                var formatted = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(total);
+
+                var amountEl = cartItem.querySelector('.amount');
+                if (amountEl) {
+                    amountEl.textContent = formatted;
+                }
+            }
+
+            function updateTotalAmount() {
+                var total = 0;
+                document.querySelectorAll('.order-item').forEach(function (item) {
+                    var priceText = item.querySelector('.price').textContent.trim();
+                    var price = parseFloat(priceText.replace(/[^\d]/g, ''));
+                    var quantityInput = item.querySelector('.quantity');
+                    var quantity = parseInt(quantityInput.value);
+
+                    if (!isNaN(price) && !isNaN(quantity)) {
+                        total += price * quantity;
+                    }
+                });
+
+                var formattedTotal = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(total);
+
+                var totalElement = document.querySelector('.totals_price');
+                if (totalElement) {
+                    totalElement.textContent = formattedTotal;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var quantityInputs = document.querySelectorAll('.quantity');
+                quantityInputs.forEach(function (input) {
+                    updateAmount(input);
+                    input.addEventListener('change', function () {
+                        updateAmount(input);
+                        updateTotalAmount();
+                    });
+                });
+
+                updateTotalAmount();
+            });
+        </script>
+
         <script src="js/Jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
     </body>

@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="model.*,java.util.*,util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
@@ -41,7 +41,7 @@
                                     <img class="img-product" alt="${item.getProduct().getName()}" src="${item.getImgURL()}" />
                                     <span class="name-product">${item.getProduct().getName()}</span>
                                 </td>
-                                <td class="price" >${item.getProduct().getPrice()}</td>
+                                <td class="price" >${FormatString.formatCurrency(item.getProduct().getPrice())}</td>
                                 <td  style="text-align: center">
                                     <form  name = "" action = "" method ="">
                                         <input type = "hidden"  name ="fromWL" value = "">
