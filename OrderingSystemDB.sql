@@ -1239,6 +1239,7 @@ GO
 ALTER DATABASE [ordering_system] SET  READ_WRITE 
 GO
 
+
 -- New
 CREATE TRIGGER trg_AfterOrderPaid
 ON [dbo].[Order]
