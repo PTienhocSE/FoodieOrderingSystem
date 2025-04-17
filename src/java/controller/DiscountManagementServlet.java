@@ -185,9 +185,6 @@ public class DiscountManagementServlet extends HttpServlet {
                 finalAmount = 0.0;
             }
             
-            int discountID = discount.getDiscountID();
-            int newTotalUse = discount.getTotalUse() + 1;
-            discountDAO.updateTotalUse(discountID, newTotalUse);
             forwardToCheckout(request, response, address, phone, timePickup, paymentMethod, deliveryOption, discountCode, finalAmount, discountAmount, totalOrderAmount);
         } catch (Exception e) {
             request.setAttribute("errorMessage", e.getMessage());

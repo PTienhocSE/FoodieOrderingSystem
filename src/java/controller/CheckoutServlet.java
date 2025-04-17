@@ -134,6 +134,12 @@ public class CheckoutServlet extends HttpServlet {
                     clearCart(userIdInt, cartItemsForOrder);
                     processVNPAY(request, response, Collections.singletonList(order), totalAmount, paymentID);
                 }
+                int discountID = discountDAO.getDiscountIDByCode(discountCode);
+                if (discountID > 0) {
+                    int currentUse = discountDAO.getTotalUseByDiscountID(discountID);
+                    discountDAO.updateTotalUse(discountID, currentUse + 1);
+                }
+
             } else {
                 response.sendRedirect("/OrderingSystem/");
             }
