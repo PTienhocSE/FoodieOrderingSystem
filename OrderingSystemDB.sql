@@ -1238,3 +1238,27 @@ USE [master]
 GO
 ALTER DATABASE [ordering_system] SET  READ_WRITE 
 GO
+
+-- New
+CREATE TRIGGER trg_AfterOrderPaid
+ON [dbo].[Order]
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        JOIN deleted d ON i.OrderID = d.OrderID
+        WHERE i.PaymentStatus = 'PAID' AND d.PaymentStatus <> 'PAID'
+    )
+    BEGIN
+        UPDATE p
+        SET p.PurchaseCount = ISNULL(p.PurchaseCount, 0) + oi.Quantity
+        FROM Product p
+        JOIN OrderItem oi ON p.ProductID = oi.ProductID
+        JOIN inserted i ON i.OrderID = oi.OrderID;
+
+    END
+END
