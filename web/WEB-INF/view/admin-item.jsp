@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"import="model.*,java.util.*,util.*"%> 
+<%@ page contentType="text/html" pageEncoding="UTF-8" import="model.*,java.util.*,util.*"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <% Account user =(Account) session.getAttribute("loggedUser"); %>
 

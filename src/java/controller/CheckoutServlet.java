@@ -115,7 +115,7 @@ public class CheckoutServlet extends HttpServlet {
 
                 orderDAO.updateOrderTotalAmount(order.getOrderId(), totalAmount);
 
-                int pointReward = (int) totalAmount / 1000;
+                int pointReward = (int) totalAmount / 10000;
                 int userIdInt = acc.getUserID();
 
                 if (rwDAO.isRewardRegistered(userIdInt)) {

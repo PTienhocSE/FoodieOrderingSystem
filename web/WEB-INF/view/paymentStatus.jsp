@@ -131,18 +131,17 @@
                     <div class="form-group">
                         <label>Amount:</label>
                         <%
-     String amountStr = request.getParameter("vnp_Amount");
-     String formattedAmount = "";
-     if (amountStr != null && !amountStr.isEmpty()) {
-         try {
-             long amount = Long.parseLong(amountStr) / 100; 
-             java.text.NumberFormat formatter = java.text.NumberFormat.getInstanc
-             e(new java.util.Locale("vi", "VN"));
-             formattedAmount = formatter.format(amount) + " VND";
-         } catch (NumberFormatException e) {
-             formattedAmount = "Invalid amount";
-         }
-     }
+    String amountStr = request.getParameter("vnp_Amount");
+    String formattedAmount = "";
+    if (amountStr != null && !amountStr.isEmpty()) {
+        try {
+            long amount = Long.parseLong(amountStr) / 100;
+            java.text.NumberFormat formatter = java.text.NumberFormat.getInstance(new java.util.Locale("vi", "VN"));
+            formattedAmount = formatter.format(amount) + " VND";
+        } catch (NumberFormatException e) {
+            formattedAmount = "Invalid amount";
+        }
+    }
                         %>
                         <label><%= formattedAmount %></label>
                     </div>  
