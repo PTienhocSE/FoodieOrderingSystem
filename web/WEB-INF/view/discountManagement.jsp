@@ -178,7 +178,7 @@
                             <th>Total Use</th>
                             <th>Minimum Amount</th>
                             <th>Maximum Discount</th>
-                            <th>Status</th>
+                            <!--<th>Status</th>-->
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -191,7 +191,7 @@
                                 <td>${discount.totalUse}</td>
                                 <td>${FormatString.formatCurrency(discount.minimumAmount)}</td>
                                 <td>${FormatString.formatCurrency(discount.maximumAmount)}</td>
-                                <td>${discount.status == 1 ? 'Active' : 'Locked'}</td>
+                                <!--<td>${discount.status == 1 ? 'Active' : 'Locked'}</td>-->
                                 <td>
                                     <button
                                         class="btn btn-warning btn-sm"
