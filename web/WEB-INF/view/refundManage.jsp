@@ -58,7 +58,7 @@
         <div class="main-content">
             <ul class="nav nav-tabs mt-4" id="refundTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="refund-tab" data-bs-toggle="tab" href="#refund" role="tab" aria-controls="refund" aria-selected="true">Refund Requests  <b style="color:#F6B76C; margin-left: 8px"> (${requestList != null ? requestList.size() : 0})</b></a>
+                    <a class="nav-link active" id="refund-tab" data-bs-toggle="tab" href="#refund" role="tab" aria-controls="refund" aria-selected="true">Refund Requests</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="rejected-tab" data-bs-toggle="tab" href="#rejected" role="tab" aria-controls="rejected" aria-selected="false">Rejected Requests <b style="color:#F6B76C; margin-left: 8px"> (${rejectedList != null ? rejectedList.size() : 0})</b></a>
@@ -71,7 +71,7 @@
             <div style="min-height: 80vh" class="tab-content" id="refundTabsContent">
                 <!-- Refund Requests Section -->
                 <div class="tab-pane fade show active" id="refund" role="tabpanel" aria-labelledby="refund-tab">
-                    <h2 class="refund-section-header">Request List For Refund Point Option</h2>
+                    <h2 class="refund-section-header">Request List For Refund Point Option <b style="color:#F6B76C; margin-left: 8px"> (${requestListPointOption != null ? requestListPointOption.size() : 0})</b></h2>
                     <c:if test="${not empty requestListPointOption}">
                         <c:forEach var="request" items="${requestListPointOption}">
                             <div class="card p-3 mb-3">
@@ -89,7 +89,7 @@
                         <div class="alert alert-warning">No refund requests found.</div>
                     </c:if>
 
-                    <h2 class="refund-section-header">Request List For Refund VNPay Option</h2>
+                    <h2 class="refund-section-header">Request List For Refund VNPay Option <b style="color:#F6B76C; margin-left: 8px"> (${requestListVNPayOption != null ? requestListVNPayOption.size() : 0})</b></h2>
                     <c:if test="${not empty requestListVNPayOption}">
                         <c:forEach var="request" items="${requestListVNPayOption}"> <!-- Đảm bảo sửa đúng tên list -->
                             <div class="card p-3 mb-3">

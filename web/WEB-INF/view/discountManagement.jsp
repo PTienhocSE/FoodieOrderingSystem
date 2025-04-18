@@ -201,12 +201,12 @@
                                         >
                                         Update
                                     </button>
-                                    <button
+<!--                                    <button
                                         class="btn ${discount.status == 1 ? 'btn-danger' : 'btn-success'} btn-sm"
                                         onclick="toggleDiscountStatus(${discount.discountID}, ${discount.status})"
                                         >
                                         ${discount.status == 1 ? 'Lock' : 'Unlock'}
-                                    </button>
+                                    </button>-->
                                 </td>
                             </tr>
                         </c:forEach>
