@@ -114,21 +114,20 @@ public class CheckoutServlet extends HttpServlet {
                 order.setTotalAmount(totalAmount);
 
                 orderDAO.updateOrderTotalAmount(order.getOrderId(), totalAmount);
-
-                int pointReward = (int) totalAmount / 10000;
                 int userIdInt = acc.getUserID();
-
-                if (rwDAO.isRewardRegistered(userIdInt)) {
-                    rwDAO.updatePoints(userIdInt, pointReward);
-                    System.out.println("Points updated successfully for userId: " + userIdInt);
-                } else {
-                    System.out.println("User has not registered for rewards. No points updated.");
-                }
 
                 if ("cod".equals(payment_method)) {
                     System.out.println("Updating PaymentID: " + paymentID + " to PAID");
                     orderDAO.updateOrderPaymentStatus(paymentID, "PAID");
                     clearCart(userIdInt, cartItemsForOrder);
+                    int pointReward = (int) totalAmount / 10000;
+
+                    if (rwDAO.isRewardRegistered(userIdInt)) {
+                        rwDAO.updatePoints(userIdInt, pointReward);
+                        System.out.println("Points updated successfully for userId: " + userIdInt);
+                    } else {
+                        System.out.println("User has not registered for rewards. No points updated.");
+                    }
                     response.sendRedirect("/OrderingSystem/order-history");
                 } else if ("vnpay".equals(payment_method)) {
                     clearCart(userIdInt, cartItemsForOrder);
