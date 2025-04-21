@@ -1263,3 +1263,15 @@ BEGIN
 
     END
 END
+
+CREATE TRIGGER trg_UpdateDiscountStatus
+ON Discount
+AFTER UPDATE
+AS
+BEGIN
+    UPDATE d
+    SET d.Status = 1
+    FROM Discount d
+    INNER JOIN inserted i ON d.DiscountID = i.DiscountID
+    WHERE i.NumberOfDiscount > i.TotalUse;
+END;

@@ -262,7 +262,7 @@
                                         readonly
                                         />
                                 </div>
-                                <div class="mb-3">
+<!--                                <div class="mb-3">
                                     <label for="minimumAmount" class="form-label"
                                            >Minimum Amount</label
                                     >
@@ -286,7 +286,7 @@
                                         required
                                         min="0"
                                         />
-                                </div>
+                                </div>-->
                                 <div class="mb-3">
                                     <label for="updateVoucherCount" class="form-label"
                                            >Total Vouchers</label
