@@ -4,6 +4,7 @@ package controller;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+import context.DiscountDAO;
 import context.OrderDAO;
 import context.RewardRedemptionDAO;
 import context.ShopDAO;
@@ -89,6 +90,16 @@ public class PaymentStatusServlet extends HttpServlet {
                 System.out.println("Points updated successfully for userId: " + userIdInt);
             } else {
                 System.out.println("User has not registered for rewards. No points updated.");
+            }
+            String discountCode = (String) session.getAttribute("discountCode");
+            if (discountCode != null && !discountCode.isEmpty()) {
+                DiscountDAO discountDAO = new DiscountDAO();
+                int discountID = discountDAO.getDiscountIDByCode(discountCode);
+                if (discountID > 0) {
+                    int currentUse = discountDAO.getTotalUseByDiscountID(discountID);
+                    discountDAO.updateTotalUse(discountID, currentUse + 1);
+                    System.out.println("Voucher use updated for discountID: " + discountID);
+                }
             }
             request.getRequestDispatcher("WEB-INF/view/paymentStatus.jsp").forward(request, response);
             session.removeAttribute("paymentID");
